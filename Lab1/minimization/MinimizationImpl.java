@@ -5,6 +5,7 @@ import java.util.function.Function;
 public class MinimizationImpl {
 
     private final double EPS = 0.00001;
+
     private final Function<Double, Double> fun;
 
     public MinimizationImpl(Function<Double, Double> fun) {
@@ -20,15 +21,15 @@ public class MinimizationImpl {
     не различимы первыми 4 значащими цифрами после запятой.
      */
     public double methodDichotomy(double l, double r) {
-        double delta, x1, x2;
+        double delta = EPS * 1/2, x1, x2;
         while ((r - l) / 2 > EPS) {
-            delta = (r - l) / 4;
             x1 = (l + r) / 2 - delta;
             x2 = (l + r) / 2 + delta;
-            if (fun.apply(x1) <= fun.apply(x2))
+            if (fun.apply(x1) <= fun.apply(x2)) {
                 r = x2;
-            else
+            } else {
                 l = x1;
+            }
         }
         return fun.apply((l + r) / 2);
     }
@@ -42,15 +43,28 @@ public class MinimizationImpl {
     не различимы первыми 4 значащими цифрами после запятой.
      */
     public double methodGoldenRatio(double l, double r) {
-        double ratioConst = (1 + Math.sqrt(5)) / 2;
-        double x1, x2;
+        final double PHI = (1 + Math.sqrt(5)) / 2;
+        double x1, x2, fx1 = 0, fx2 = 0;
+        boolean reFx1 = false, reFx2 = false;
         while ((r - l) / 2 > EPS) {
-            x1 = r - (r - l) / ratioConst;
-            x2 = l + (r - l) / ratioConst;
-            if (fun.apply(x1) <= fun.apply(x2))
+            double del = (r - l) / PHI;
+            x1 = r - del;
+            x2 = l + del;
+            if (reFx1)
+                fx1 = fun.apply(x1);
+            if (reFx2)
+                fx2 = fun.apply(x2);
+            if (fx1 <= fx2) {
                 r = x2;
-            else
+                fx2 = fx1;
+                reFx1 = true;
+                reFx2 = false;
+            } else {
                 l = x1;
+                fx1 = fx2;
+                reFx2 = true;
+                reFx1 = false;
+            }
         }
         return fun.apply((l + r) / 2);
     }
