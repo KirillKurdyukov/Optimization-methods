@@ -15,14 +15,13 @@ public class MinimizationImpl {
     Метод дихотомии.
     Алгоритм работает корректно на интервале [l, r], если
     функция унимодальная на этом отрезке.
-    Дельта берется из интервала (0; (r - l) / 2).
+    Дельта берется EPS / 2.
     Значение для ответа берется из середины отрезка [l; r], когда границы
     не различимы первыми 4 значащими цифрами после запятой.
      */
     public double methodDichotomy(double l, double r) {
-        double delta, x1, x2;
+        double delta = EPS / 2, x1, x2;
         while ((r - l) / 2 > EPS) {
-            delta = (r - l) / 4;
             x1 = (l + r) / 2 - delta;
             x2 = (l + r) / 2 + delta;
             if (fun.apply(x1) <= fun.apply(x2))
@@ -61,6 +60,6 @@ public class MinimizationImpl {
 
     public static void main(String[] args) {
         MinimizationImpl minimization = new MinimizationImpl((x) -> x * x + 2 * x + 1);
-        System.out.printf("%.4f%n", minimization.methodDichotomy(-5, -2));
+        System.out.printf("%.4f%n", minimization.methodDichotomy(-2, 2));
     }
 }
