@@ -42,7 +42,7 @@ public class MinimizationImpl {
     функция унимодальная на этом отрезке.
     За константу Ф берется пропорция золотого сечения.
     Граница высчитывается один раз.
-    Значение для ответа берется из середины отрезка [l; r], когда границы
+    Значение для ответа берется из середины отрезка [l < x1; x2 < r], когда границы l, r
     не различимы первыми 4 значащими цифрами после запятой.
      */
     public double methodGoldenRatio(double l, double r) {
@@ -70,17 +70,50 @@ public class MinimizationImpl {
     }
 
     /*
-
+    Метод Фибоначчи.
+    Улучшение реализации "поиска с помощью золотого сечения", так
+    как высчитывание коэффициентов происходит в типах Long, а Double.
+    Вычисления вспомогательного множителя происходит с помощью чисел Фибоначчи.
+    Алгоритм работает корректно на интервале [l, r], если
+    функция унимодальная на этом отрезке.
+    Значение для ответа берется из середины отрезка [l < x1; x2 < r], когда границы l, r
+    не различимы первыми 4 значащими цифрами после запятой.
      */
     public double methodFibonacciNumbers(double l, double r) {
-        ArrayList<Double> fibonacciCount = new ArrayList<>();
-        fibonacciCount.add(0.0);
-        fibonacciCount.add(1.0);
-        return 0;
+        long n = (long) ((r - l) / EPS);
+        ArrayList<Long> fib = new ArrayList<>();
+        fib.add(0L);
+        fib.add(1L);
+        int s = -1;
+        while (n > fib.get(fib.size() - 1)) {
+            fib.add(fib.get(fib.size() - 1) + fib.get(fib.size() - 2));
+            s++;
+        }
+        double cur = (double) fib.get(s - 1) / fib.get(s) * (r - l);
+        double x2 = l + cur;
+        double x1 = r - cur;
+        double f1 = fun.apply(x1), f2 = fun.apply(x2);
+        for (int i = s - 1; i > 2; i--) {
+            if (f1 < f2) {
+                r = x2;
+                x2 = x1;
+                f2 = f1;
+                x1 = l + (double) fib.get(i - 2) / fib.get(i) * (r - l);
+                f1 = fun.apply(x1);
+            } else {
+                l = x1;
+                x1 = x2;
+                f1 = f2;
+                x2 = l + (double) fib.get(i - 1) / fib.get(i) * (r - l);
+                f2 = fun.apply(x2);
+            }
+        }
+        return fun.apply((x1 + x2) / 2);
     }
 
+
     public static void main(String[] args) {
-        MinimizationImpl minimization = new MinimizationImpl((x) -> x * x + 2 * x + 1);
-        System.out.printf("%.4f%n", minimization.methodGoldenRatio(-5, -2));
+        MinimizationImpl minimization = new MinimizationImpl((x) -> x * Math.sin(x) + 2 * Math.cos(x));
+        System.out.printf("%.4f%n", minimization.methodFibonacciNumbers(-6, -4));
     }
 }
