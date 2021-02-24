@@ -147,6 +147,80 @@ public class MinimizationImpl {
         return fun.apply((l + r) / 2);
     }
 
+    public double brent(double l, double r) {
+        double k = (3 - Math.sqrt(5)) / 2;
+        double x, w, v;
+        x = w = v = (l + r) / 2; // -2
+        double fx, fw, fv;
+        fx = fw = fv = fun.apply(x); // 5
+        double d, e;
+        d = e = r - l; // 6
+        while (d > EPS) {
+            double g;
+            g = e; // 6
+            e = d; // 6
+            double u;
+            if (!(fx == fw || fx == fv || fv == fw)) {
+                u = x - (Math.pow((x - w), 2) * (fx - fv) - Math.pow((x - v), 2) * (fx - fw)) / (2 * ((x - w) * (fx - fv) - (x - v) * (fx - fw)));
+                if (u >= l + EPS && u <= r - EPS && Math.abs(u - x) < g / 2) {
+                    d = Math.abs(u - x);
+                } else {
+                    if (x < (r - l) / 2) {
+                        u = l + k * (r - x);
+                        d = r - x;
+                    } else {
+                        u = r - k * (x - l);
+                        d = x - l;
+                    }
+                }
+            } else {
+                if (x < (r - l) / 2) {
+                    u = x + k * (r - x);
+                    d = r - x;
+
+                } else {
+                    u = x - k * (x - l);
+                    d = x - l;
+                }
+                if (Math.abs(u - x) < EPS) {
+                    u = x + Math.signum(u - x) * EPS;
+                }
+            }
+            double fu = fun.apply(u);
+            if (fu <= fx) {
+                if (u >= x) {
+                    l = x;
+                } else {
+                    r = x;
+                }
+                v = w;
+                w = x;
+                x = u;
+                fv = fw;
+                fw = fx;
+                fx = fu;
+            } else {
+                if (u >= x) {
+                    r = u;
+                } else {
+                    l = u;
+                }
+                if (fu <= fw || w == x) {
+                    v = w;
+                    w = u;
+                    fv = fw;
+                    fw = fu;
+                } else {
+                    if (fu <= fv || v == x || v == w){
+                        v = u;
+                        fv = fu;
+                    }
+                }
+            }
+        }
+        return fun.apply(x);
+    }
+
     public double getEPS() {
         return EPS;
     }
