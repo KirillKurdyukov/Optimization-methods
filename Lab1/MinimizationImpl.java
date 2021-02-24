@@ -239,7 +239,7 @@ public class MinimizationImpl {
 
     public static void main(String[] args) {
         MinimizationImpl minimization = new MinimizationImpl((x) -> x * Math.sin(x) + 2 * Math.cos(x));
-        System.out.printf("%.4f%n", minimization.methodParabolas(-6, -4));
+        System.out.printf("%.4f%n", minimization.methodParabolas(-1, -1));
     }
 
 }
