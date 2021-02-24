@@ -114,6 +114,39 @@ public class MinimizationImpl {
         return fun.apply((x1 + x2) / 2);
     }
 
+    /*
+    Метод парабол
+     */
+    public double methodParabolas(double l, double r) {
+        double fl = fun.apply(l);
+        double fr = fun.apply(r);
+        double x = (l + r) / 2;
+        double fx = fun.apply(x);while (r - l > EPS) {
+            double u =  x - (Math.pow(x - l, 2) * (fx - fr) - Math.pow(x - r, 2) * (fx - fl)) / (2 * ((x - l) * (fx - fr) - (x - r) * (fx - fl)));
+            double fu = fun.apply(u);
+            if (fu > fx) {
+                if (u > x) {
+                    r = u;
+                    fr = fu;
+                } else {
+                    l = u;
+                    fl = fu;
+                }
+            } else {
+                if (x > u) {
+                    r = x;
+                    fr = fx;
+                } else {
+                    l = x;
+                    fl = fx;
+                }
+                x = u;
+                fx = fu;
+            }
+        }
+        return fun.apply((l + r) / 2);
+    }
+
     public double getEPS() {
         return EPS;
     }
@@ -131,8 +164,8 @@ public class MinimizationImpl {
     }
 
     public static void main(String[] args) {
-
-        //System.out.printf("%.4f%n", minimization.methodFibonacciNumbers(-6, -4));
+        MinimizationImpl minimization = new MinimizationImpl((x) -> x * Math.sin(x) + 2 * Math.cos(x));
+        System.out.printf("%.4f%n", minimization.methodParabolas(-6, -4));
     }
 
 }
