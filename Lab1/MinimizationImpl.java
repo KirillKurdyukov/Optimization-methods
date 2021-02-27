@@ -147,40 +147,39 @@ public class MinimizationImpl {
         return fun.apply((l + r) / 2);
     }
 
-    public double brent(double l, double r) {
+    public double brent(double a, double c) {
         double k = (3 - Math.sqrt(5)) / 2;
         double x, w, v;
-        x = w = v = (l + r) / 2; // -2
+        x = w = v = (a + c) / 2;
         double fx, fw, fv;
-        fx = fw = fv = fun.apply(x); // 5
+        fx = fw = fv = fun.apply(x);
         double d, e;
-        d = e = r - l; // 6
+        d = e = c - a;
         while (d > EPS) {
             double g;
-            g = e; // 6
-            e = d; // 6
+            g = e;
+            e = d;
             double u;
             if (!(fx == fw || fx == fv || fv == fw)) {
                 u = x - (Math.pow((x - w), 2) * (fx - fv) - Math.pow((x - v), 2) * (fx - fw)) / (2 * ((x - w) * (fx - fv) - (x - v) * (fx - fw)));
-                if (u >= l + EPS && u <= r - EPS && Math.abs(u - x) < g / 2) {
+                if (u >= a + EPS && u <= c - EPS && Math.abs(u - x) < g / 2) {
                     d = Math.abs(u - x);
                 } else {
-                    if (x < (r - l) / 2) {
-                        u = l + k * (r - x);
-                        d = r - x;
+                    if (x < (c - a) / 2) {
+                        u = a + k * (c - x);
+                        d = c - x;
                     } else {
-                        u = r - k * (x - l);
-                        d = x - l;
+                        u = c - k * (x - a);
+                        d = x - a;
                     }
                 }
             } else {
-                if (x < (r - l) / 2) {
-                    u = x + k * (r - x);
-                    d = r - x;
-
+                if (x < (c - a) / 2) {
+                    u = x + k * (c - x);
+                    d = c - x;
                 } else {
-                    u = x - k * (x - l);
-                    d = x - l;
+                    u = x - k * (x - a);
+                    d = x - a;
                 }
                 if (Math.abs(u - x) < EPS) {
                     u = x + Math.signum(u - x) * EPS;
@@ -189,9 +188,9 @@ public class MinimizationImpl {
             double fu = fun.apply(u);
             if (fu <= fx) {
                 if (u >= x) {
-                    l = x;
+                    a = x;
                 } else {
-                    r = x;
+                    c = x;
                 }
                 v = w;
                 w = x;
@@ -201,9 +200,9 @@ public class MinimizationImpl {
                 fx = fu;
             } else {
                 if (u >= x) {
-                    r = u;
+                    c = u;
                 } else {
-                    l = u;
+                    a = u;
                 }
                 if (fu <= fw || w == x) {
                     v = w;
