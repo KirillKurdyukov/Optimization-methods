@@ -29,11 +29,14 @@ public class MinimizationImpl {
         if ((r - l) / 2 > EPS) {
             x1 = (l + r) / 2 - delta;
             x2 = (l + r) / 2 + delta;
+            double d1 = r - l;
             if (fun.apply(x1) <= fun.apply(x2)) {
                 r = x2;
             } else {
                 l = x1;
             }
+            double d2 = r - l;
+            System.out.println( l + " " + r + " " + d1 / d2 + " " + fun.apply(l) + " " + fun.apply(r));
             return new Trie(false, l, r, fun.apply((l + r) / 2));
         }
         return new Trie(true, l, r, fun.apply((l + r) / 2));
@@ -147,6 +150,9 @@ public class MinimizationImpl {
         return fun.apply((l + r) / 2);
     }
 
+    /*
+    метод Брента.
+     */
     public double brent(double l, double r) {
         double k = (3 - Math.sqrt(5)) / 2;
         double x, w, v;
