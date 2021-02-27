@@ -1,3 +1,5 @@
+package engine;
+
 import processing.Trie;
 
 import java.util.ArrayList;
@@ -34,6 +36,10 @@ public class MinimizationImpl {
             } else {
                 l = x1;
             }
+<<<<<<< HEAD:Lab1/MinimizationImpl.java
+=======
+            double d2 = r - l;
+>>>>>>> 1aae9c2755241e67beb20fbf0740e07e41aec8ad:Lab1/engine/MinimizationImpl.java
             return new Trie(false, l, r, fun.apply((l + r) / 2));
         }
         return new Trie(true, l, r, fun.apply((l + r) / 2));
@@ -48,13 +54,15 @@ public class MinimizationImpl {
     Значение для ответа берется из середины отрезка [l < x1; x2 < r], когда границы l, r
     не различимы первыми 4 значащими цифрами после запятой.
      */
-    public double methodGoldenRatio(double l, double r) {
+    public Trie methodGoldenRatio(Trie input) {
         final double phi = (1 + Math.sqrt(5)) / 2;
         final double resPhi = 2 - phi;
+        double l = input.getX1();
+        double r = input.getX2();
         double x1 = l + resPhi * (r - l),
                 x2 = r - resPhi * (r - l),
                 f1 = fun.apply(x1), f2 = fun.apply(x2);
-        while ((r - l) > EPS) {
+        if ((r - l) > EPS) {
             if (f1 < f2) {
                 r = x2;
                 x2 = x1;
@@ -68,8 +76,9 @@ public class MinimizationImpl {
                 x2 = r - resPhi * (r - l);
                 f2 = fun.apply(x2);
             }
+            return new Trie(false, l, r, fun.apply((l + r) / 2));
         }
-        return fun.apply((x1 + x2) / 2);
+        return new Trie(false, l, r, fun.apply((l + r) / 2));
     }
 
     /*
@@ -82,7 +91,9 @@ public class MinimizationImpl {
     Значение для ответа берется из середины отрезка [l < x1; x2 < r], когда границы l, r
     не различимы первыми 4 значащими цифрами после запятой.
      */
-    public double methodFibonacciNumbers(double l, double r) {
+    public Trie methodFibonacciNumbers(Trie input) {
+        double l = input.getX1();
+        double r = input.getX2();
         long n = (long) ((r - l) / EPS);
         ArrayList<Long> fib = new ArrayList<>();
         fib.add(0L);
@@ -112,20 +123,27 @@ public class MinimizationImpl {
                 f2 = fun.apply(x2);
             }
         }
-        return fun.apply((x1 + x2) / 2);
+        return new Trie(false, l, r, fun.apply((l + r) / 2));
     }
 
     /*
     Метод парабол
      */
-    public double methodParabolas(double l, double r) {
+    public Trie methodParabolas(Trie input) {
+        double l = input.getX1();
+        double r = input.getX2();
         double fl = fun.apply(l);
         double fr = fun.apply(r);
         double x = (l + r) / 2;
         double fx = fun.apply(x);
+<<<<<<< HEAD:Lab1/MinimizationImpl.java
         while (r - l > EPS) {
             double d = r - l;
             double u =  x - (Math.pow(x - l, 2) * (fx - fr) - Math.pow(x - r, 2) * (fx - fl)) / (2 * ((x - l) * (fx - fr) - (x - r) * (fx - fl)));
+=======
+        if (r - l > EPS) {
+            double u = x - (Math.pow(x - l, 2) * (fx - fr) - Math.pow(x - r, 2) * (fx - fl)) / (2 * ((x - l) * (fx - fr) - (x - r) * (fx - fl)));
+>>>>>>> 1aae9c2755241e67beb20fbf0740e07e41aec8ad:Lab1/engine/MinimizationImpl.java
             double fu = fun.apply(u);
             if (fu > fx) {
                 if (u > x) {
@@ -146,23 +164,30 @@ public class MinimizationImpl {
                 x = u;
                 fx = fu;
             }
+            return new Trie(false, l, r, fun.apply((l + r) / 2));
         }
-        return fun.apply((l + r) / 2);
+        return new Trie(false, l, r, fun.apply((l + r) / 2));
     }
 
     /*
     метод Брента.
      */
-    public double brent(double a, double c) {
+    public Trie brent(Trie input) {
         double k = (3 - Math.sqrt(5)) / 2;
         double x, w, v;
+        double a = input.getX1();
+        double c = input.getX2();
         x = w = v = (a + c) / 2;
         double fx, fw, fv;
         fx = fw = fv = fun.apply(x);
         double d, e;
         d = e = c - a;
+<<<<<<< HEAD:Lab1/MinimizationImpl.java
         while (d > EPS) {
             double b = c - a;
+=======
+        if (d > EPS) {
+>>>>>>> 1aae9c2755241e67beb20fbf0740e07e41aec8ad:Lab1/engine/MinimizationImpl.java
             double g;
             g = e;
             e = d;
@@ -217,15 +242,20 @@ public class MinimizationImpl {
                     fv = fw;
                     fw = fu;
                 } else {
-                    if (fu <= fv || v == x || v == w){
+                    if (fu <= fv || v == x || v == w) {
                         v = u;
                         fv = fu;
                     }
                 }
             }
+            return new Trie(false, a, c, fun.apply((a + c) / 2));
         }
+<<<<<<< HEAD:Lab1/MinimizationImpl.java
 
         return fun.apply(x);
+=======
+        return new Trie(false, a, c, fun.apply((a + c) / 2));
+>>>>>>> 1aae9c2755241e67beb20fbf0740e07e41aec8ad:Lab1/engine/MinimizationImpl.java
     }
 
     public double getEPS() {
@@ -244,9 +274,12 @@ public class MinimizationImpl {
         return fun;
     }
 
+<<<<<<< HEAD:Lab1/MinimizationImpl.java
     public static void main(String[] args) {
         MinimizationImpl minimization = new MinimizationImpl((x) -> x * Math.sin(x) + 2 * Math.cos(x));
         minimization.brent(-6, -4);
     }
+=======
+>>>>>>> 1aae9c2755241e67beb20fbf0740e07e41aec8ad:Lab1/engine/MinimizationImpl.java
 
 }

@@ -50,6 +50,10 @@ public class CoordinatePlane {
             float currentPositionY = translateY(i);
             g.drawLine(currentPositionX, (float) (y_0 - STROKE_SIZE), currentPositionX, (float) (y_0 + STROKE_SIZE));
             g.drawLine((float) (x_0 - STROKE_SIZE), currentPositionY, (float) (x_0 + STROKE_SIZE), currentPositionY);
+            g.drawString(String.valueOf(i), currentPositionX, (float) (y_0 + STROKE_SIZE));
+            if (i != 0) {
+                g.drawString(String.valueOf(-i), (float) (x_0 + STROKE_SIZE), currentPositionY);
+            }
         }
         drawPoint(g, (float) x_0, (float) y_0);
     }

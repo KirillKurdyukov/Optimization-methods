@@ -1,3 +1,5 @@
+package engine;
+
 import graphic.CoordinatePlane;
 import org.newdawn.slick.*;
 import processing.Process;
@@ -11,8 +13,11 @@ public class Engine extends BasicGame {
 
     private final Button switchButton;
     private final Button startButton;
+    private final Button restartButton;
     private CoordinatePlane plane;
     private Process process;
+
+    public static Mode currentMode;
 
     public static void main(String[] args) throws SlickException {
         AppGameContainer container = new AppGameContainer(new Engine("Optimization"));
@@ -24,10 +29,29 @@ public class Engine extends BasicGame {
 
     public Engine(String title) {
         super(title);
-        switchButton = new Button(50, 50, 100, 30);
-        startButton = new Button(50, 100, 100, 30);
+        switchButton = new Button(75, 50, 150, 30, "Switch mode");
+        startButton = new Button(75, 100, 150, 30, "Next iteration");
+        restartButton = new Button(75, 150, 150, 30, "Restart");
         FUNCTION = (x) -> x * Math.sin(x) + 2 * Math.cos(x);
         IMPLEMENTATION = new MinimizationImpl(FUNCTION);
+        currentMode = Mode.DICHOTOMY;
+    }
+
+    private Function<Trie, Trie> getCurrentFunction() {
+        switch (currentMode) {
+            case DICHOTOMY:
+                return IMPLEMENTATION::methodDichotomy;
+            case GOLDEN_RATIO:
+                return IMPLEMENTATION::methodGoldenRatio;
+            case PARABOLAS:
+                return IMPLEMENTATION::methodParabolas;
+            case FIBONACCI_NUMBERS:
+                return IMPLEMENTATION::methodFibonacciNumbers;
+            case BRENT:
+                return IMPLEMENTATION::brent;
+            default:
+                return null;
+        }
     }
 
     @Override
@@ -35,18 +59,30 @@ public class Engine extends BasicGame {
         plane = new CoordinatePlane(gameContainer.getWidth() / 2d, gameContainer.getHeight() / 2d);
         plane.addFunction(FUNCTION);
         plane.addFunction(Math::exp);
-        process = new Process(IMPLEMENTATION::methodDichotomy, new Trie(-6, -4));
+        process = new Process(getCurrentFunction(), new Trie(IMPLEMENTATION.getLeft(), IMPLEMENTATION.getRight()));
         gameContainer.getGraphics().setBackground(Color.white);
     }
 
     @Override
     public void update(GameContainer gameContainer, int i) throws SlickException {
         Input input = gameContainer.getInput();
-        if (startButton.isTouched(input.getMouseX(), input.getMouseY()) &&
-                input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-            process.process();
+        if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
+            checkButtons(input.getMouseX(), input.getMouseY());
         }
         changePlane(input);
+    }
+
+    private void checkButtons(int x, int y) {
+        if (startButton.isTouched(x, y)) {
+            process.process();
+        }
+        if (switchButton.isTouched(x, y)) {
+            currentMode = Mode.values()[(currentMode.ordinal() + 1) % Mode.values().length];
+            process = new Process(getCurrentFunction(), new Trie(IMPLEMENTATION.getLeft(), IMPLEMENTATION.getRight()));
+        }
+        if (restartButton.isTouched(x, y)) {
+            process = new Process(getCurrentFunction(), new Trie(IMPLEMENTATION.getLeft(), IMPLEMENTATION.getRight()));
+        }
     }
 
     private void changePlane(Input input) {
@@ -74,12 +110,11 @@ public class Engine extends BasicGame {
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
         graphics.setColor(Color.black);
-        switchButton.draw(graphics);
-        startButton.draw(graphics);
         plane.draw(graphics);
         graphics.setColor(Color.red);
         process.draw(plane, graphics);
+        switchButton.draw(graphics);
+        startButton.draw(graphics);
+        restartButton.draw(graphics);
     }
-
-
 }

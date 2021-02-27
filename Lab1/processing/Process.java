@@ -1,5 +1,6 @@
 package processing;
 
+import engine.Engine;
 import graphic.CoordinatePlane;
 import org.newdawn.slick.Graphics;
 
@@ -18,6 +19,8 @@ public class Process {
         plane.drawVerticalLine(g, plane.translateX(currentResults.getX1()));
         plane.drawVerticalLine(g, plane.translateX(currentResults.getX2()));
         plane.drawHorizontalLine(g, plane.translateY(-currentResults.getY()));
+        g.drawString("Mode: " + Engine.currentMode + " Segment: [" + currentResults.getX1() + ", " + currentResults.getX2() + "] Value: " + currentResults.getY(),
+                10, 10);
     }
 
     public void process() {
