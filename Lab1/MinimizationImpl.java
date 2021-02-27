@@ -29,14 +29,11 @@ public class MinimizationImpl {
         if ((r - l) / 2 > EPS) {
             x1 = (l + r) / 2 - delta;
             x2 = (l + r) / 2 + delta;
-            double d1 = r - l;
             if (fun.apply(x1) <= fun.apply(x2)) {
                 r = x2;
             } else {
                 l = x1;
             }
-            double d2 = r - l;
-            System.out.println( l + " " + r + " " + d1 / d2 + " " + fun.apply(l) + " " + fun.apply(r));
             return new Trie(false, l, r, fun.apply((l + r) / 2));
         }
         return new Trie(true, l, r, fun.apply((l + r) / 2));
@@ -100,6 +97,7 @@ public class MinimizationImpl {
         double x1 = r - cur;
         double f1 = fun.apply(x1), f2 = fun.apply(x2);
         for (int i = s - 1; i > 2; i--) {
+            double d = r - l;
             if (f1 < f2) {
                 r = x2;
                 x2 = x1;
@@ -124,7 +122,9 @@ public class MinimizationImpl {
         double fl = fun.apply(l);
         double fr = fun.apply(r);
         double x = (l + r) / 2;
-        double fx = fun.apply(x);while (r - l > EPS) {
+        double fx = fun.apply(x);
+        while (r - l > EPS) {
+            double d = r - l;
             double u =  x - (Math.pow(x - l, 2) * (fx - fr) - Math.pow(x - r, 2) * (fx - fl)) / (2 * ((x - l) * (fx - fr) - (x - r) * (fx - fl)));
             double fu = fun.apply(u);
             if (fu > fx) {
@@ -162,6 +162,7 @@ public class MinimizationImpl {
         double d, e;
         d = e = c - a;
         while (d > EPS) {
+            double b = c - a;
             double g;
             g = e;
             e = d;
@@ -223,6 +224,7 @@ public class MinimizationImpl {
                 }
             }
         }
+
         return fun.apply(x);
     }
 
@@ -244,7 +246,7 @@ public class MinimizationImpl {
 
     public static void main(String[] args) {
         MinimizationImpl minimization = new MinimizationImpl((x) -> x * Math.sin(x) + 2 * Math.cos(x));
-        System.out.printf("%.4f%n", minimization.methodParabolas(-1, -1));
+        minimization.brent(-6, -4);
     }
 
 }
