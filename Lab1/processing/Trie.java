@@ -2,24 +2,18 @@ package processing;
 
 public class Trie {
 
-    private final boolean COMPLETE;
     private final double X1;
     private final double X2;
     private final double Y;
 
-    public Trie(boolean COMPLETE, double x1, double x2, double y) {
-        this.COMPLETE = COMPLETE;
+    public Trie(double x1, double x2, double y) {
         X1 = x1;
         X2 = x2;
         Y = y;
     }
 
     public Trie(double x1, double x2) {
-        this(false, x1, x2, 0);
-    }
-
-    public boolean isCOMPLETE() {
-        return COMPLETE;
+        this(x1, x2, 0);
     }
 
     public double getX1() {

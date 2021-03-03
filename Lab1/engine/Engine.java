@@ -5,6 +5,7 @@ import org.newdawn.slick.*;
 import processing.Process;
 import processing.Trie;
 
+import java.util.ArrayList;
 import java.util.function.Function;
 
 public class Engine extends BasicGame {
@@ -37,7 +38,7 @@ public class Engine extends BasicGame {
         currentMode = Mode.DICHOTOMY;
     }
 
-    private Function<Trie, Trie> getCurrentFunction() {
+    private Function<Trie, ArrayList<Trie>> getCurrentFunction() {
         switch (currentMode) {
             case DICHOTOMY:
                 return IMPLEMENTATION::methodDichotomy;

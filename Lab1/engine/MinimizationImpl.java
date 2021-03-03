@@ -24,11 +24,12 @@ public class MinimizationImpl {
     Значение для ответа берется из середины отрезка [l; r], когда границы
     не различимы первыми 4 значащими цифрами после запятой.
      */
-    public Trie methodDichotomy(Trie input) {
+    public ArrayList<Trie> methodDichotomy(Trie input) {
         double delta = EPS / 2, x1, x2;
         double l = input.getX1();
         double r = input.getX2();
-        if ((r - l) / 2 > EPS) {
+        ArrayList<Trie> result = new ArrayList<>();
+        while ((r - l) / 2 > EPS) {
             x1 = (l + r) / 2 - delta;
             x2 = (l + r) / 2 + delta;
             double d1 = r - l;
@@ -38,9 +39,10 @@ public class MinimizationImpl {
                 l = x1;
             }
             double d2 = r - l;
-            return new Trie(false, l, r, fun.apply((l + r) / 2));
+            result.add(new Trie(l, r, fun.apply((l + r) / 2)));
         }
-        return new Trie(true, l, r, fun.apply((l + r) / 2));
+        result.add(new Trie(l, r, fun.apply((l + r) / 2)));
+        return result;
     }
 
     /*
@@ -52,7 +54,7 @@ public class MinimizationImpl {
     Значение для ответа берется из середины отрезка [l < x1; x2 < r], когда границы l, r
     не различимы первыми 4 значащими цифрами после запятой.
      */
-    public Trie methodGoldenRatio(Trie input) {
+    public ArrayList<Trie> methodGoldenRatio(Trie input) {
         final double phi = (1 + Math.sqrt(5)) / 2;
         final double resPhi = 2 - phi;
         double l = input.getX1();
@@ -60,7 +62,8 @@ public class MinimizationImpl {
         double x1 = l + resPhi * (r - l),
                 x2 = r - resPhi * (r - l),
                 f1 = fun.apply(x1), f2 = fun.apply(x2);
-        if ((r - l) > EPS) {
+        ArrayList<Trie> result = new ArrayList<>();
+        while ((r - l) > EPS) {
             if (f1 < f2) {
                 r = x2;
                 x2 = x1;
@@ -74,9 +77,10 @@ public class MinimizationImpl {
                 x2 = r - resPhi * (r - l);
                 f2 = fun.apply(x2);
             }
-            return new Trie(false, l, r, fun.apply((l + r) / 2));
+            result.add(new Trie(l, r, fun.apply((l + r) / 2)));
         }
-        return new Trie(false, l, r, fun.apply((l + r) / 2));
+        result.add(new Trie(l, r, fun.apply((l + r) / 2)));
+        return result;
     }
 
     /*
@@ -89,10 +93,11 @@ public class MinimizationImpl {
     Значение для ответа берется из середины отрезка [l < x1; x2 < r], когда границы l, r
     не различимы первыми 4 значащими цифрами после запятой.
      */
-    public Trie methodFibonacciNumbers(Trie input) {
+    public ArrayList<Trie> methodFibonacciNumbers(Trie input) {
         double l = input.getX1();
         double r = input.getX2();
         long n = (long) ((r - l) / EPS);
+        ArrayList<Trie> result = new ArrayList<>();
         ArrayList<Long> fib = new ArrayList<>();
         fib.add(0L);
         fib.add(1L);
@@ -119,21 +124,24 @@ public class MinimizationImpl {
                 x2 = l + (double) fib.get(i - 1) / fib.get(i) * (r - l);
                 f2 = fun.apply(x2);
             }
+            result.add(new Trie(l, r, fun.apply((l + r) / 2)));
         }
-        return new Trie(false, l, r, fun.apply((l + r) / 2));
+        result.add(new Trie(l, r, fun.apply((l + r) / 2)));
+        return result;
     }
 
     /*
     Метод парабол
      */
-    public Trie methodParabolas(Trie input) {
+    public ArrayList<Trie> methodParabolas(Trie input) {
         double l = input.getX1();
         double r = input.getX2();
         double fl = fun.apply(l);
         double fr = fun.apply(r);
         double x = (l + r) / 2;
         double fx = fun.apply(x);
-        if (r - l > EPS) {
+        ArrayList<Trie> result = new ArrayList<>();
+        while (r - l > EPS) {
             double u = x - (Math.pow(x - l, 2) * (fx - fr) - Math.pow(x - r, 2) * (fx - fl)) / (2 * ((x - l) * (fx - fr) - (x - r) * (fx - fl)));
             double fu = fun.apply(u);
             if (fu > fx) {
@@ -155,15 +163,16 @@ public class MinimizationImpl {
                 x = u;
                 fx = fu;
             }
-            return new Trie(false, l, r, fun.apply((l + r) / 2));
+            result.add(new Trie(l, r, fun.apply((l + r) / 2)));
         }
-        return new Trie(false, l, r, fun.apply((l + r) / 2));
+        result.add(new Trie(l, r, fun.apply((l + r) / 2)));
+        return result;
     }
 
     /*
     метод Брента.
      */
-    public Trie brent(Trie input) {
+    public ArrayList<Trie> brent(Trie input) {
         double k = (3 - Math.sqrt(5)) / 2;
         double x, w, v;
         double a = input.getX1();
@@ -173,7 +182,8 @@ public class MinimizationImpl {
         fx = fw = fv = fun.apply(x);
         double d, e;
         d = e = c - a;
-        if (d > EPS) {
+        ArrayList<Trie> result = new ArrayList<>();
+        while (d > EPS) {
             double g;
             g = e;
             e = d;
@@ -234,9 +244,10 @@ public class MinimizationImpl {
                     }
                 }
             }
-            return new Trie(false, a, c, fun.apply((a + c) / 2));
+            result.add(new Trie(a, c, fun.apply((a + c) / 2)));
         }
-        return new Trie(false, a, c, fun.apply((a + c) / 2));
+        result.add(new Trie(a, c, fun.apply((a + c) / 2)));
+        return result;
     }
 
     public double getEPS() {
