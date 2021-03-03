@@ -265,6 +265,4 @@ public class MinimizationImpl {
     public Function<Double, Double> getFun() {
         return fun;
     }
-
-
 }
