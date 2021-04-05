@@ -199,7 +199,7 @@
 	<jar destfile="lib/pedigree.jar" 
 		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/peditor/**">
 		<manifest>
-	      <attribute name="Main-Class" value="org.newdawn.slick.tools.peditor.ParticleEditor"/>
+	      <attribute name="methods.Main-Class" value="org.newdawn.slick.tools.peditor.ParticleEditor"/>
 	      <attribute name="Class-Path" value="slick.jar lwjgl.jar"/>
 	    </manifest>
 	</jar>
@@ -215,7 +215,7 @@
 	<jar destfile="lib/hiero.jar" 
 		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/hiero/**">
 		<manifest>
-	      <attribute name="Main-Class" value="org.newdawn.slick.tools.hiero.Hiero"/>
+	      <attribute name="methods.Main-Class" value="org.newdawn.slick.tools.hiero.Hiero"/>
 	    </manifest>
 	</jar>
 	<jar update="true" destfile="lib/hiero.jar" 
@@ -232,7 +232,7 @@
 	<jar destfile="lib/scalar.jar" 
 		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/scalar/**">
 		<manifest>
-	      <attribute name="Main-Class" value="org.newdawn.slick.tools.scalar.Scalar"/>
+	      <attribute name="methods.Main-Class" value="org.newdawn.slick.tools.scalar.Scalar"/>
 	    </manifest>
 	</jar>
 </target>
@@ -245,7 +245,7 @@
 	<jar destfile="lib/packulike.jar" 
 		 basedir="${build.dir}/classes" includes="org/newdawn/slick/tools/packulike/**">
 		<manifest>
-	      <attribute name="Main-Class" value="org.newdawn.slick.tools.packulike.Packer"/>
+	      <attribute name="methods.Main-Class" value="org.newdawn.slick.tools.packulike.Packer"/>
 	    </manifest>
 	</jar>
 </target>
