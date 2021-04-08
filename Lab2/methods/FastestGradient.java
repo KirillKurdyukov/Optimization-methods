@@ -1,22 +1,39 @@
 package methods;
 
+import processing.Trie;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class GradientDescent {
+public class FastestGradient {
+    private static Double methodDichotomy(Function<Double, Double> function,
+                                  double l,
+                                  double r,
+                                  double eps) {
+        double delta = eps / 2, x1, x2;
+        while ((r - l) / 2 > eps) {
+            x1 = (l + r) / 2 - delta;
+            x2 = (l + r) / 2 + delta;
+            if (function.apply(x1) <= function.apply(x2)) {
+                r = x2;
+            } else {
+                l = x1;
+            }
+        }
+        return (r + l) / 2;
+    }
 
     public static Double run(double eps,
-                             double alpha,
                              Gradient gradient,
                              VectorNumbers x,
                              Function<VectorNumbers, Double> function) {
         VectorNumbers y;
+        double alpha = 1;
         while(gradient.module(x) >= eps) {
+            final VectorNumbers X = x;
+            alpha = methodDichotomy(a -> function.apply(gradient.evaluate(X).multiplyConst(-1 * a).add(X)), 0, 1, eps);
             y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
-            while(function.apply(y) >= function.apply(x)) {
-                alpha = alpha / 2;
-                y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
-            }
             x = y;
         }
         return function.apply(x);
@@ -32,6 +49,6 @@ public class GradientDescent {
         Gradient gradient = new Gradient(List.of(dx, dy));
         VectorNumbers x = new VectorNumbers(List.of(200.0, 200.0));
 
-        System.out.println(run(0.00000001, 16, gradient, x, function));
+        System.out.println(run(0.001, gradient, x, function));
     }
 }
