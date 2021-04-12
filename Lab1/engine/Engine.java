@@ -59,7 +59,6 @@ public class Engine extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         plane = new CoordinatePlane(gameContainer.getWidth() / 2d, gameContainer.getHeight() / 2d);
         plane.addFunction(FUNCTION);
-        plane.addFunction(Math::exp);
         process = new Process(getCurrentFunction(), new Trie(IMPLEMENTATION.getLeft(), IMPLEMENTATION.getRight()));
         gameContainer.getGraphics().setBackground(Color.white);
     }
