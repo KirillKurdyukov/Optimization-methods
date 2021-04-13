@@ -1,16 +1,16 @@
 package methods;
 
-import processing.Trie;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class FastestGradient {
+    public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
+
     private static Double methodDichotomy(Function<Double, Double> function,
-                                  double l,
-                                  double r,
-                                  double eps) {
+                                          double l,
+                                          double r,
+                                          double eps) {
         double delta = eps / 2, x1, x2;
         while ((r - l) / 2 > eps) {
             x1 = (l + r) / 2 - delta;
@@ -30,8 +30,9 @@ public class FastestGradient {
                              Function<VectorNumbers, Double> function) {
         VectorNumbers y;
         double alpha = 1;
-        while(gradient.module(x) >= eps) {
+        while (gradient.module(x) >= eps) {
             final VectorNumbers X = x;
+            vectors.add(x);
             alpha = methodDichotomy(a -> function.apply(gradient.evaluate(X).multiplyConst(-1 * a).add(X)), 0, 1, eps);
             y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
             x = y;

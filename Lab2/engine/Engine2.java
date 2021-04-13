@@ -21,7 +21,8 @@ public class Engine2 extends BasicGame {
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
         plane = new CoordinatePlane(gameContainer.getWidth() / 2d, gameContainer.getHeight() / 2d);
-        plane.addFunction(a -> Math.sqrt(1 - a * a));
+        plane.addFunction(x -> (1 / 64d) * (Math.sqrt(-127 * x * x + 2530 * x - 607) - 63 * x - 15));
+        plane.addFunction(x -> (1 / 64d) * (-Math.sqrt(-127 * x * x + 2530 * x - 607) - 63 * x - 15));
     }
 
     private void changePlane(Input input) {
@@ -54,8 +55,10 @@ public class Engine2 extends BasicGame {
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
+        graphics.setWorldClip(0, 0, gameContainer.getWidth(), gameContainer.getHeight());
         graphics.setBackground(Color.white);
         graphics.setColor(Color.black);
         plane.draw(graphics);
+        graphics.clearWorldClip();
     }
 }

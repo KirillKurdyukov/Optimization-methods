@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 public class CoordinatePlane {
     private final int INTERVAL_NUMBER = 40;
-    private final int STEP = 1;
+    private final double STEP = 1;
     private final int STROKE_SIZE = 3;
 
     private int scale = 70;
@@ -79,8 +79,10 @@ public class CoordinatePlane {
             double nextX = (i + STEP) / scale;
             double currentValue = function.apply(currentX);
             double nextValue = function.apply(nextX);
-            g.drawLine(translateX(currentX), translateY(-currentValue),
-                    translateX(nextX), translateY(-nextValue));
+            if (!Double.isNaN(currentValue) && !Double.isNaN(nextValue)) {
+                g.drawLine(translateX(currentX), translateY(-currentValue),
+                        translateX(nextX), translateY(-nextValue));
+            }
         }
     }
 

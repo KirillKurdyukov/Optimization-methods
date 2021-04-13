@@ -1,9 +1,11 @@
 package methods;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 public class GradientDescent {
+    public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
 
     public static Double run(double eps,
                              double alpha,
@@ -11,9 +13,10 @@ public class GradientDescent {
                              VectorNumbers x,
                              Function<VectorNumbers, Double> function) {
         VectorNumbers y;
-        while(gradient.module(x) >= eps) {
+        while (gradient.module(x) >= eps) {
+            vectors.add(x);
             y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
-            while(function.apply(y) >= function.apply(x)) {
+            while (function.apply(y) >= function.apply(x)) {
                 alpha = alpha / 2;
                 y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
             }
