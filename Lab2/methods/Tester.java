@@ -27,12 +27,12 @@ public class Tester {
                     double y = v.get(1);
                     return 128 * y + 126 * x + 30;
                 }));
-        FastestGradient.run(0.00001, gradient, new VectorNumbers(List.of(0.0, 0.0)), function);
         for (double eps = 0.0001; eps >= 0.000000001; eps /= 10) {
             for (int alpha = 10; alpha <= 100; alpha+= 10) {
                 for (double x = 0; x < 3; x++)
                     for (double y = 0; y < 3; y++)
-                        System.out.println(eps + " | " + alpha + " | " + ansForTest1 + " == " + FastestGradient.run(eps,
+                        System.out.println(eps + " | " + alpha + " | " + ansForTest1 + " == " + GradientDescent.run(eps,
+                                alpha,
                                 gradient,
                                 new VectorNumbers(List.of(x, y)),
                                 function));

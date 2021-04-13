@@ -1,6 +1,6 @@
 package methods;
 
-import java.util.List;
+
 import java.util.function.Function;
 
 import static methods.OneDimensionalOptimization.*;

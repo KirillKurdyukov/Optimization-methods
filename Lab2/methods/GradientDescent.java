@@ -4,26 +4,27 @@ import java.util.List;
 import java.util.function.Function;
 
 public class GradientDescent {
-
     public static Double run(double eps,
                              double alpha,
                              Gradient gradient,
                              VectorNumbers x,
                              Function<VectorNumbers, Double> function) {
+        int countIteration = 0;
         VectorNumbers y;
-        while(gradient.module(x) > eps) {
-            y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
-            while(function.apply(y) >= function.apply(x)) {
-                Double module = gradient.module(x);
-                alpha = alpha / 2;
-                if (alpha * module < eps) {
+        double module = gradient.module(x);
+        while (module > eps) {
+            VectorNumbers gradientVal = gradient.evaluate(x);
+            y = gradientVal.multiplyConst(-1 * alpha / module).add(x);
+            while (function.apply(y) >= function.apply(x)) {
+                if (countIteration == 1000)
                     return function.apply(x);
-                }
-                y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
+                alpha = alpha / 2;
+                y = gradientVal.multiplyConst(-1 * alpha / module).add(x);
+                countIteration++;
             }
             x = y;
+            module = gradient.module(x);
         }
         return function.apply(x);
     }
-
 }
