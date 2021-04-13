@@ -65,7 +65,7 @@ public class OneDimensionalOptimization {
                 f2Val = function.apply(x2);
             }
         }
-        return function.apply((l + r) / 2);
+        return (l + r) / 2;
     }
 
     /**
@@ -110,7 +110,7 @@ public class OneDimensionalOptimization {
                 f2 = function.apply(x2);
             }
         }
-        return function.apply((l + r) / 2);
+        return (l + r) / 2;
     }
 
     /**
@@ -147,7 +147,7 @@ public class OneDimensionalOptimization {
                 fx = fu;
             }
         }
-        return function.apply((l + r) / 2);
+        return (l + r) / 2;
     }
 
     /**
@@ -228,6 +228,6 @@ public class OneDimensionalOptimization {
                 }
             }
         }
-        return function.apply((a + c) / 2);
+        return (a + c) / 2;
     }
 }

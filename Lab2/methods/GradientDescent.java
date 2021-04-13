@@ -14,8 +14,12 @@ public class GradientDescent {
         while(gradient.module(x) > eps) {
             y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
             while(function.apply(y) >= function.apply(x)) {
+                Double module = gradient.module(x);
                 alpha = alpha / 2;
-                y = gradient.evaluate(x).multiplyConst(-1 * alpha / gradient.module(x)).add(x);
+                if (alpha * module < eps) {
+                    return function.apply(x);
+                }
+                y = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
             }
             x = y;
         }
