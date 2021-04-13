@@ -22,7 +22,8 @@ public class Gradient extends Vector<Function<VectorNumbers, Double>>  {
         return Math.sqrt(IntStream.range(0, this.size())
         .mapToObj(i -> this.arguments.get(i).apply(vector))
         .map(i -> i * i)
-        .reduce(Double::sum).orElseThrow());
+        .reduce(Double::sum)
+                .orElseThrow());
     }
 
 }
