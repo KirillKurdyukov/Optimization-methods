@@ -1,7 +1,11 @@
 package engine;
 
 import graphic.CoordinatePlane;
+import methods.FastestGradient;
+import methods.VectorNumbers;
 import org.newdawn.slick.*;
+
+import static methods.Tester.function1;
 
 public class Engine2 extends BasicGame {
     CoordinatePlane plane;
@@ -21,8 +25,10 @@ public class Engine2 extends BasicGame {
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
         plane = new CoordinatePlane(gameContainer.getWidth() / 2d, gameContainer.getHeight() / 2d);
-        plane.addFunction(x -> (1 / 64d) * (Math.sqrt(-127 * x * x + 2530 * x - 607) - 63 * x - 15));
-        plane.addFunction(x -> (1 / 64d) * (-Math.sqrt(-127 * x * x + 2530 * x - 607) - 63 * x - 15));
+        //  for (int i = 0; i < ; i++) {
+
+        //}
+
     }
 
     private void changePlane(Input input) {
@@ -44,6 +50,15 @@ public class Engine2 extends BasicGame {
         }
         if (input.isKeyDown(Input.KEY_2)) {
             plane.changeScale(-1);
+        }
+        if (input.isKeyPressed(Input.KEY_3)) {
+            FastestGradient.run();
+            for (VectorNumbers vectorNumber : FastestGradient.vectors) {
+                plane.addVector(vectorNumber);
+                double z = function1.apply(vectorNumber);
+                plane.addFunction(x -> (1 / 64d) * (Math.sqrt(-127 * x * x + 2530 * x - 607 + 64 * z) - 63 * x - 15));
+                plane.addFunction(x -> (1 / 64d) * (-Math.sqrt(-127 * x * x + 2530 * x - 607 + 64 * z) - 63 * x - 15));
+            }
         }
     }
 

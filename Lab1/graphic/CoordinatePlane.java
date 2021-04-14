@@ -1,5 +1,7 @@
 package graphic;
 
+import methods.VectorNumbers;
+import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
 
 import java.util.ArrayList;
@@ -7,7 +9,7 @@ import java.util.function.Function;
 
 public class CoordinatePlane {
     private final int INTERVAL_NUMBER = 40;
-    private final double STEP = 1;
+    private final double STEP = 4;
     private final int STROKE_SIZE = 3;
 
     private int scale = 70;
@@ -18,15 +20,21 @@ public class CoordinatePlane {
     private double y_0;
 
     private final ArrayList<Function<Double, Double>> FUNCTIONS;
+    private final ArrayList<VectorNumbers> VECTORS;
 
     public CoordinatePlane(double x_0, double y_0) {
         this.x_0 = x_0;
         this.y_0 = y_0;
         FUNCTIONS = new ArrayList<>();
+        VECTORS = new ArrayList<>();
     }
 
     public void addFunction(Function<Double, Double> newFunction) {
         FUNCTIONS.add(newFunction);
+    }
+
+    public void addVector(VectorNumbers vector) {
+        VECTORS.add(vector);
     }
 
     public void drawPoint(Graphics g, float x, float y) {
@@ -63,6 +71,9 @@ public class CoordinatePlane {
         for (var function : FUNCTIONS) {
             drawFunction(function, g);
         }
+        g.setColor(Color.red);
+        drawIntervals(g);
+        g.setColor(Color.black);
     }
 
     public float translateX(double x) {
@@ -83,6 +94,32 @@ public class CoordinatePlane {
                 g.drawLine(translateX(currentX), translateY(-currentValue),
                         translateX(nextX), translateY(-nextValue));
             }
+        }
+    }
+
+    private void drawArrow(Graphics g, double x1, double y1, double x2, double y2) {
+        double size = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+        double xAn = Math.acos((x2 - x1) / size);
+        double yAn = Math.asin((y2 - y1) / size);
+        float newCos1 = (float) Math.cos(xAn + Math.PI / 8) * 10;
+        float newCos2 = (float) Math.cos(xAn - Math.PI / 8) * 10;
+        float newSin1 = (float) Math.sin(yAn + Math.PI / 8) * 10;
+        float newSin2 = (float) Math.sin(yAn - Math.PI / 8) * 10;
+        g.drawLine(translateX(x1), translateY(-y1),
+                translateX(x2), translateY(-y2));
+        g.drawLine(translateX(x2), translateY(-y2), -newCos1 +
+                translateX(x2), newSin1 + translateY(-y2));
+        g.drawLine(translateX(x2), translateY(-y2),
+                -newCos2 + translateX(x2), newSin2 + translateY(-y2));
+    }
+
+    public void drawIntervals(Graphics g) {
+        for (int i = 0; i < VECTORS.size() - 1; i++) {
+            double currentX = VECTORS.get(i).get(0);
+            double nextX = VECTORS.get(i + 1).get(0);
+            double currentValue = VECTORS.get(i).get(1);
+            double nextValue = VECTORS.get(i + 1).get(1);
+            drawArrow(g, currentX, currentValue, nextX, nextValue);
         }
     }
 

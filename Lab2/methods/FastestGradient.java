@@ -2,18 +2,22 @@ package methods;
 
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
-import static methods.OneDimensionalOptimization.*;
+import static methods.OneDimensionalOptimization.methodGoldenRatio;
+import static methods.Tester.*;
 
 public class FastestGradient {
     public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
+
     public static Double run(double eps,
                              Gradient gradient,
                              VectorNumbers x,
                              Function<VectorNumbers, Double> function) {
+        vectors.clear();
         double alpha;
-        while(gradient.module(x) >= eps) {
+        while (gradient.module(x) >= eps) {
             final VectorNumbers X = x;
             vectors.add(x);
             alpha = methodGoldenRatio(a -> function.apply(gradient.evaluate(X).multiplyConst(-1 * a).add(X)), eps, 1, eps);
@@ -25,4 +29,7 @@ public class FastestGradient {
         return function.apply(x);
     }
 
+    public static void run() {
+        run(eps, gradient1, new VectorNumbers(List.of(0d, 0d)), function1);
+    }
 }
