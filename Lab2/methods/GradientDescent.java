@@ -23,8 +23,10 @@ public class GradientDescent {
             VectorNumbers gradientVal = gradient.evaluate(x);
             y = gradientVal.multiplyConst(-1 * alpha / module).add(x);
             while (function.apply(y) >= function.apply(x)) {
-                if (countIteration == 1000)
+                if (countIteration == 1000) {
+                    System.out.println("more than 1000 iterations!");
                     return function.apply(x);
+                }
                 alpha = alpha / 2;
                 y = gradientVal.multiplyConst(-1 * alpha / module).add(x);
                 countIteration++;

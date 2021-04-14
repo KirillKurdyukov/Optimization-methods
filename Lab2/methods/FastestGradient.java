@@ -30,6 +30,6 @@ public class FastestGradient {
     }
 
     public static void run() {
-        run(eps, gradient1, new VectorNumbers(List.of(0d, 0d)), function1);
+        double a = run(eps, gradient1, new VectorNumbers(List.of(0d, 0d)), function1);
     }
 }
