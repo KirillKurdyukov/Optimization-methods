@@ -65,7 +65,18 @@ public class Tester {
             })
     );
 
+    public static Gradient gradient3 = new Gradient(List
+            .of(v -> {
+                double x = v.get(0);
+                return 20 * x - 5;
+            }, v -> {
+                double y = v.get(1);
+                return 2 * y + 3;
+            })
+    );
+
     private void test1() {
+
         for (double eps = 0.0001; eps >= 0.000000001; eps /= 10) {
             for (int alpha = 10; alpha <= 100; alpha += 10) {
                 for (double x = 0; x < 3; x++)
