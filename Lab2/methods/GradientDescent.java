@@ -1,5 +1,7 @@
 package methods;
 
+import engine.Engine2;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -37,7 +39,8 @@ public class GradientDescent {
         return function.apply(x);
     }
 
-    public static void run() {
-        run(eps, 10, gradient1, new VectorNumbers(List.of(0d, 0d)), function1);
+    public static void run(Function<VectorNumbers, Double> function) {
+        vectors.clear();
+        run(eps, 10, gradient1, new VectorNumbers(List.of(0d, 0d)), function);
     }
 }

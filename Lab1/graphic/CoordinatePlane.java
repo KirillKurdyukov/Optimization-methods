@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 public class CoordinatePlane {
     private final int INTERVAL_NUMBER = 40;
-    private final double STEP = 4;
+    private final double STEP = 20;
     private final int STROKE_SIZE = 3;
 
     private int scale = 70;

@@ -6,7 +6,7 @@ import java.util.function.Function;
 public class Tester {
     private static final double ansForFunction1 = -23799.0 / 127;
     private static final double ansForFunction2 = -331103.0 / 394;
-    private static final double ansForFunction3 = 41.0 / 8;
+    private static final double ansForFunction3 = 212.0 / 39;
 
     public static double eps = 0.00001d;
     public static Function<VectorNumbers, Double> function1 = v -> {
@@ -34,7 +34,8 @@ public class Tester {
     public static Function<VectorNumbers, Double> function3 = v -> {
         double x = v.get(0);
         double y = v.get(1);
-        return 10 * x * x +
+        return 10 * x * x -
+                x * y +
                 y * y -
                 5 * x +
                 3 * y +
@@ -68,10 +69,12 @@ public class Tester {
     public static Gradient gradient3 = new Gradient(List
             .of(v -> {
                 double x = v.get(0);
-                return 20 * x - 5;
-            }, v -> {
                 double y = v.get(1);
-                return 2 * y + 3;
+                return 20 * x - y - 5;
+            }, v -> {
+                double x = v.get(0);
+                double y = v.get(1);
+                return -x + 2 * y + 3;
             })
     );
 
