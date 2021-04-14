@@ -70,11 +70,13 @@ public class Tester {
             for (int alpha = 10; alpha <= 100; alpha += 10) {
                 for (double x = 0; x < 3; x++)
                     for (double y = 0; y < 3; y++)
-                        System.out.println(eps + " | " + alpha + " | " + ansForFunction1 + " == " + GradientDescent.run(eps,
-                                alpha,
-                                gradient1,
+                        System.out.println(eps + " | " + alpha + " | " + ansForFunction1 + " == " +  function1.apply(ConjugateGradient.run(eps,
+                                new SquareMatrix(List.of(
+                                        new VectorNumbers(List.of(128.0, 126.0)),
+                                        new VectorNumbers(List.of(126.0, 128.0)))
+                                ),
                                 new VectorNumbers(List.of(x, y)),
-                                function1));
+                                new VectorNumbers(List.of(-10.0, 30.0)))));
             }
         }
     }

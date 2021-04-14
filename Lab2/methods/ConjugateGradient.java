@@ -2,34 +2,27 @@ package methods;
 
 public class ConjugateGradient {
     public static VectorNumbers run(double eps, SquareMatrix A, VectorNumbers x, VectorNumbers b) {
-        int k = 0;
-        VectorNumbers r_k = b.subtract(A.multiply(x));
-        VectorNumbers p_k = b.subtract(A.multiply(x));
-        VectorNumbers Apk;
-
-        double RdR = r_k.scalar(r_k);
-        do {
-            Apk = A.multiply(p_k);
-            double alpha_k = RdR /  p_k.scalar(Apk) ;
-
-            x = x.add(p_k.multiplyConst(alpha_k));
-
-            r_k = r_k.add(Apk.multiplyConst(-alpha_k));
-
-            double newRdR = r_k.scalar(r_k);
-
-            if(newRdR < eps*eps)
-                return x;
-
-            double beta_k = newRdR/RdR;
-
-            p_k = p_k.multiplyConst(beta_k).add(r_k);
-
-            RdR = newRdR;
+        double alpha, beta;
+        VectorNumbers p, p1, x1, grad, grad1, Apk;
+        grad = A.multiply(x).add(b);
+        p = grad.multiplyConst(-1);
+        while(true) {
+            for (int i = 0; i < A.rows(); i++) {
+                if (grad.module() < eps) {
+                    return x;
+                }
+                Apk = A.multiply(p);
+                alpha = grad.module() * grad.module() / Apk.scalar(p);
+                x1 = x.add(p.multiplyConst(alpha));
+                grad1 = grad.add(Apk.multiplyConst(alpha));
+                beta = grad1.module() * grad1.module() / grad.module() / grad.module();
+                p1 = grad1.multiplyConst(-1).add(p.multiplyConst(beta));
+                x = x1;
+                p = p1;
+                grad = grad1;
+            }
+            grad = A.multiply(x).add(b);
         }
-        while(k++ < A.rows());
-
-        return x;
     }
 
 }
