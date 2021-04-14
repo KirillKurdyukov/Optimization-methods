@@ -10,8 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="project" level="project" />
-    <orderEntry type="library" name="lib1" level="project" />
     <orderEntry type="module" module-name="slick" />
-    <orderEntry type="module" module-name="slick1" />
   </component>
 </module>

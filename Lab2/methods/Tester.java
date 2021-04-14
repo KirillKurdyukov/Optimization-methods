@@ -6,6 +6,7 @@ import java.util.function.Function;
 public class Tester {
     private static final double ansForFunction1 = -23799.0 / 127;
     private static final double ansForFunction2 = -331103.0 / 394;
+    private static final double ansForFunction3 = 41.0 / 8;
 
     public static double eps = 0.00001d;
     public static Function<VectorNumbers, Double> function1 = v -> {
@@ -28,6 +29,16 @@ public class Tester {
                 95 * x -
                 9 * y +
                 91;
+    };
+
+    public static Function<VectorNumbers, Double> function3 = v -> {
+        double x = v.get(0);
+        double y = v.get(1);
+        return 10 * x * x +
+                y * y -
+                5 * x +
+                3 * y +
+                8;
     };
 
     public static Gradient gradient1 = new Gradient(List
