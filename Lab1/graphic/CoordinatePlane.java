@@ -3,6 +3,7 @@ package graphic;
 import methods.VectorNumbers;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Input;
 
 import java.util.ArrayList;
 import java.util.function.Function;
@@ -140,9 +141,35 @@ public class CoordinatePlane {
         y_0 += y;
     }
 
+    public void changePlane(Input input) {
+        int speed = 4;
+        if (input.isKeyDown(Input.KEY_W)) {
+            moveCenter(0, speed);
+        }
+        if (input.isKeyDown(Input.KEY_A)) {
+            moveCenter(speed, 0);
+        }
+        if (input.isKeyDown(Input.KEY_S)) {
+            moveCenter(0, -speed);
+        }
+        if (input.isKeyDown(Input.KEY_D)) {
+            moveCenter(-speed, 0);
+        }
+        if (input.isKeyDown(Input.KEY_1)) {
+            changeScale(1);
+        }
+        if (input.isKeyDown(Input.KEY_2)) {
+            changeScale(-1);
+        }
+    }
     public void changeScale(int value) {
         if (scale > -value + 10 && scale < 400 - value) {
             scale += value;
         }
+    }
+
+    public void clear() {
+        FUNCTIONS.clear();
+        VECTORS.clear();
     }
 }

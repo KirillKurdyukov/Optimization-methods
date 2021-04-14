@@ -1,7 +1,10 @@
 package methods;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
+
+import static methods.Tester.*;
 
 public class GradientDescent {
 
@@ -30,5 +33,9 @@ public class GradientDescent {
             module = gradient.module(x);
         }
         return function.apply(x);
+    }
+
+    public static void run() {
+        run(eps, 10, gradient1, new VectorNumbers(List.of(0d, 0d)), function1);
     }
 }

@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.function.Function;
 
 public class Engine extends BasicGame {
-    private final Function<Double, Double> FUNCTION;
-    private final MinimizationImpl IMPLEMENTATION;
+    private Function<Double, Double> FUNCTION;
+    private MinimizationImpl IMPLEMENTATION;
 
     private final Button switchButton;
     private final Button startButton;
@@ -21,7 +21,7 @@ public class Engine extends BasicGame {
     public static Mode currentMode;
 
     public static void main(String[] args) throws SlickException {
-        AppGameContainer container = new AppGameContainer(new Engine("Optimization"));
+        AppGameContainer container = new AppGameContainer(new Engine("Optimization1"));
         container.setDisplayMode(1280, 720, false);
         container.setShowFPS(false);
         container.setTargetFrameRate(128);
@@ -69,7 +69,7 @@ public class Engine extends BasicGame {
         if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
             checkButtons(input.getMouseX(), input.getMouseY());
         }
-        changePlane(input);
+        plane.changePlane(input);
     }
 
     private void checkButtons(int x, int y) {
@@ -85,27 +85,6 @@ public class Engine extends BasicGame {
         }
     }
 
-    private void changePlane(Input input) {
-        int speed = 4;
-        if (input.isKeyDown(Input.KEY_W)) {
-            plane.moveCenter(0, speed);
-        }
-        if (input.isKeyDown(Input.KEY_A)) {
-            plane.moveCenter(speed, 0);
-        }
-        if (input.isKeyDown(Input.KEY_S)) {
-            plane.moveCenter(0, -speed);
-        }
-        if (input.isKeyDown(Input.KEY_D)) {
-            plane.moveCenter(-speed, 0);
-        }
-        if (input.isKeyDown(Input.KEY_1)) {
-            plane.changeScale(1);
-        }
-        if (input.isKeyDown(Input.KEY_2)) {
-            plane.changeScale(-1);
-        }
-    }
 
     @Override
     public void render(GameContainer gameContainer, Graphics graphics) throws SlickException {
