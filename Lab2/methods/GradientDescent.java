@@ -39,8 +39,8 @@ public class GradientDescent {
         return function.apply(x);
     }
 
-    public static void run(Function<VectorNumbers, Double> function) {
+    public static void run(Function<VectorNumbers, Double> function, Gradient gradient) {
         vectors.clear();
-        run(eps, 10, gradient1, new VectorNumbers(List.of(0d, 0d)), function);
+        run(eps, 10, gradient, new VectorNumbers(List.of(0d, 0d)), function);
     }
 }

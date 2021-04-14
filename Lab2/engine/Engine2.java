@@ -2,6 +2,7 @@ package engine;
 
 import graphic.CoordinatePlane;
 import methods.FastestGradient;
+import methods.Gradient;
 import methods.GradientDescent;
 import methods.VectorNumbers;
 import org.newdawn.slick.*;
@@ -19,6 +20,7 @@ public class Engine2 extends BasicGame {
     private Mode2 currentMode;
     public static FMode mode;
     private Function<VectorNumbers, Double> function;
+    private Gradient gradient;
 
     public Engine2(String title) {
         super(title);
@@ -50,7 +52,7 @@ public class Engine2 extends BasicGame {
             plane.clear();
             currentMode = Mode2.values()[(currentMode.ordinal() + 1) % Mode2.values().length];
         }
-        if(changeFunc.isTouched(x1, y1)) {
+        if (changeFunc.isTouched(x1, y1)) {
             plane.clear();
             mode = FMode.values()[(mode.ordinal() + 1) % FMode.values().length];
         }
@@ -59,11 +61,11 @@ public class Engine2 extends BasicGame {
             plane.clear();
             switch (currentMode) {
                 case FASTEST_GRADIENT:
-                    FastestGradient.run(function);
+                    FastestGradient.run(function, gradient);
                     addFunctions(FastestGradient.vectors);
                     break;
                 case GRADIENT_DESCENT:
-                    GradientDescent.run(function);
+                    GradientDescent.run(function, gradient);
                     addFunctions(GradientDescent.vectors);
             }
         }
@@ -73,12 +75,15 @@ public class Engine2 extends BasicGame {
         switch (mode) {
             case FUNCTION1:
                 function = function1;
+                gradient = gradient1;
                 break;
             case FUNCTION2:
                 function = function2;
+                gradient = gradient2;
                 break;
             default:
                 function = function3;
+                gradient = gradient3;
         }
     }
 
@@ -89,7 +94,7 @@ public class Engine2 extends BasicGame {
             case FUNCTION2:
                 return (x -> (1 / 198d) * (Math.sqrt(-788 * x * x + 34092 * x - 35955 + 396 * z) - 196 * x + 9));
             default:
-                return (x -> (1 / 2d) * (Math.sqrt(-40 * x * x + 20 * x - 23 + 4 * z) - 3));
+                return (x -> (1 / 2d) * (Math.sqrt(-39 * x * x + 14 * x - 23 + 4 * z) + x - 3));
         }
     }
 
@@ -100,7 +105,7 @@ public class Engine2 extends BasicGame {
             case FUNCTION2:
                 return (x -> (1 / 198d) * (-Math.sqrt(-788 * x * x + 34092 * x - 35955 + 396 * z) - 196 * x + 9));
             default:
-                return (x -> (1 / 2d) * (-Math.sqrt(-40 * x * x + 20 * x - 23 + 4 * z) - 3));
+                return (x -> (1 / 2d) * (-Math.sqrt(-39 * x * x + 14 * x - 23 + 4 * z) + x - 3));
         }
     }
 
