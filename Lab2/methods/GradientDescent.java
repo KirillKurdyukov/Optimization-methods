@@ -1,5 +1,7 @@
 package methods;
 
+import engine.Engine2;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -23,8 +25,10 @@ public class GradientDescent {
             VectorNumbers gradientVal = gradient.evaluate(x);
             y = gradientVal.multiplyConst(-1 * alpha / module).add(x);
             while (function.apply(y) >= function.apply(x)) {
-                if (countIteration == 1000)
+                if (countIteration == 1000) {
+                    System.out.println("more than 1000 iterations!");
                     return function.apply(x);
+                }
                 alpha = alpha / 2;
                 y = gradientVal.multiplyConst(-1 * alpha / module).add(x);
                 countIteration++;
@@ -35,7 +39,8 @@ public class GradientDescent {
         return function.apply(x);
     }
 
-    public static void run() {
-        run(eps, 10, gradient1, new VectorNumbers(List.of(0d, 0d)), function1);
+    public static void run(Function<VectorNumbers, Double> function) {
+        vectors.clear();
+        run(eps, 10, gradient1, new VectorNumbers(List.of(0d, 0d)), function);
     }
 }

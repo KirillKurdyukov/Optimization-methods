@@ -7,19 +7,24 @@ import methods.VectorNumbers;
 import org.newdawn.slick.*;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
-import static methods.Tester.function1;
+import static methods.Tester.*;
 
 public class Engine2 extends BasicGame {
     CoordinatePlane plane;
     private final Button changeMode;
+    private final Button changeFunc;
     private final Button start;
     private Mode2 currentMode;
+    public static FMode mode;
+    private Function<VectorNumbers, Double> function;
 
     public Engine2(String title) {
         super(title);
         currentMode = Mode2.FASTEST_GRADIENT;
         changeMode = new Button(75, 50, 150, 30, "Switch mode");
+        changeFunc = new Button(75, 150, 150, 30, "Switch function");
         start = new Button(75, 100, 150, 30, "Draw");
     }
 
@@ -34,6 +39,8 @@ public class Engine2 extends BasicGame {
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
         plane = new CoordinatePlane(gameContainer.getWidth() / 2d, gameContainer.getHeight() / 2d);
+        mode = FMode.FUNCTION1;
+        setFunction();
     }
 
     private void checkButtons(Input input) {
@@ -43,26 +50,66 @@ public class Engine2 extends BasicGame {
             plane.clear();
             currentMode = Mode2.values()[(currentMode.ordinal() + 1) % Mode2.values().length];
         }
+        if(changeFunc.isTouched(x1, y1)) {
+            plane.clear();
+            mode = FMode.values()[(mode.ordinal() + 1) % FMode.values().length];
+        }
+        setFunction();
         if (start.isTouched(x1, y1)) {
             plane.clear();
             switch (currentMode) {
                 case FASTEST_GRADIENT:
-                    FastestGradient.run();
+                    FastestGradient.run(function);
                     addFunctions(FastestGradient.vectors);
                     break;
                 case GRADIENT_DESCENT:
-                    GradientDescent.run();
+                    GradientDescent.run(function);
                     addFunctions(GradientDescent.vectors);
             }
+        }
+    }
+
+    private void setFunction() {
+        switch (mode) {
+            case FUNCTION1:
+                function = function1;
+                break;
+            case FUNCTION2:
+                function = function2;
+                break;
+            default:
+                function = function3;
+        }
+    }
+
+    private Function<Double, Double> first(double z) {
+        switch (mode) {
+            case FUNCTION1:
+                return (x -> (1 / 64d) * (Math.sqrt(-127 * x * x + 2530 * x - 607 + 64 * z) - 63 * x - 15));
+            case FUNCTION2:
+                return (x -> (1 / 198d) * (Math.sqrt(-788 * x * x + 34092 * x - 35955 + 396 * z) - 196 * x + 9));
+            default:
+                return (x -> (1 / 2d) * (Math.sqrt(-40 * x * x + 20 * x - 23 + 4 * z) - 3));
+        }
+    }
+
+    private Function<Double, Double> second(double z) {
+        switch (mode) {
+            case FUNCTION1:
+                return (x -> (1 / 64d) * (-Math.sqrt(-127 * x * x + 2530 * x - 607 + 64 * z) - 63 * x - 15));
+            case FUNCTION2:
+                return (x -> (1 / 198d) * (-Math.sqrt(-788 * x * x + 34092 * x - 35955 + 396 * z) - 196 * x + 9));
+            default:
+                return (x -> (1 / 2d) * (-Math.sqrt(-40 * x * x + 20 * x - 23 + 4 * z) - 3));
         }
     }
 
     private void addFunctions(ArrayList<VectorNumbers> functions) {
         for (VectorNumbers vectorNumber : functions) {
             plane.addVector(vectorNumber);
-            double z = function1.apply(vectorNumber);
-            plane.addFunction(x -> (1 / 64d) * (Math.sqrt(-127 * x * x + 2530 * x - 607 + 64 * z) - 63 * x - 15));
-            plane.addFunction(x -> (1 / 64d) * (-Math.sqrt(-127 * x * x + 2530 * x - 607 + 64 * z) - 63 * x - 15));
+            double z = function.apply(vectorNumber);
+            plane.addFunction(first(z));
+            plane.addFunction(second(z));
         }
     }
 
@@ -81,9 +128,10 @@ public class Engine2 extends BasicGame {
         graphics.setBackground(Color.white);
         graphics.setColor(Color.black);
         plane.draw(graphics);
-        graphics.drawString("Mode: " + currentMode, 10, 10);
+        graphics.drawString("Mode: " + currentMode + " Function: " + mode, 10, 10);
         start.draw(graphics);
         changeMode.draw(graphics);
+        changeFunc.draw(graphics);
         graphics.clearWorldClip();
     }
 }
