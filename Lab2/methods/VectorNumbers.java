@@ -40,11 +40,11 @@ public class VectorNumbers extends Vector<Double> {
                 .orElseThrow());
     }
 
-    public Double scalar(VectorNumbers vec) {
-        return Math.sqrt(IntStream.range(0, this.size())
+    public double scalar(VectorNumbers vec) {
+        return IntStream.range(0, this.size())
                 .mapToObj(i -> this.arguments.get(i) * vec.get(i))
                 .reduce(Double::sum)
-                .orElseThrow());
+                .orElseThrow();
     }
 
 }

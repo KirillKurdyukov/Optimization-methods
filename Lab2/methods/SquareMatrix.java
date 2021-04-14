@@ -8,7 +8,7 @@ public class SquareMatrix {
     protected ArrayList<VectorNumbers> arguments;
 
     public SquareMatrix (List<VectorNumbers> arguments) {
-        this.arguments = (ArrayList<VectorNumbers>) arguments;
+        this.arguments = new ArrayList<>(arguments);
     }
 
     public int rows() {
@@ -21,8 +21,7 @@ public class SquareMatrix {
     public VectorNumbers multiply(VectorNumbers vec) {
         ArrayList<Double> ans = new ArrayList<>(0);
         for (int i = 0; i < vec.size(); i++) {
-            Double scalar = arguments.get(i).scalar(vec);
-            ans.add(scalar * scalar);
+            ans.add(arguments.get(i).scalar(vec));
         }
         return new VectorNumbers(ans);
     }
