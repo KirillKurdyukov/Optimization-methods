@@ -36,6 +36,7 @@ public class GradientDescent {
             x = y;
             module = gradient.module(x);
         }
+        vectors.add(x);
         return function.apply(x);
     }
 

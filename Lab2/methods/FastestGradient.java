@@ -17,17 +17,16 @@ public class FastestGradient {
                              Function<VectorNumbers, Double> function) {
         vectors.clear();
         double alpha;
-        int count = 0;
         while (gradient.module(x) >= eps) {
             final VectorNumbers X = x;
             vectors.add(x);
-            count++;
             alpha = methodGoldenRatio(a -> function.apply(gradient.evaluate(X).multiplyConst(-1 * a).add(X)), eps, 1, eps);
             if (alpha * gradient.module(X) < eps) {
                 return function.apply(X);
             }
             x = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
         }
+        vectors.add(x);
         return function.apply(x);
     }
 
