@@ -26,12 +26,4 @@ public class SquareMatrix {
         return new VectorNumbers(ans);
     }
 
-    public static void main(String[] args) {
-        SquareMatrix a = new SquareMatrix(
-                new ArrayList<>(List.of(
-                        new VectorNumbers(List.of(1.0, 1.0)),
-                        new VectorNumbers(List.of(1.0, 1.0)))));
-        VectorNumbers vec = new VectorNumbers(List.of(1.0, 2.0));
-        System.out.println(a.multiply(vec));
-    }
 }

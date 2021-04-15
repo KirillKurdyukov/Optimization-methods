@@ -61,7 +61,7 @@ public class Engine2 extends BasicGame {
             plane.clear();
             switch (currentMode) {
                 case FASTEST_GRADIENT:
-                    FastestGradient.run(function, gradient);
+                    FastestGradient.run(function, gradient, 2);
                     addFunctions(FastestGradient.vectors);
                     break;
                 case GRADIENT_DESCENT:
