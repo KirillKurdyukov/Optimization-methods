@@ -9,6 +9,7 @@ public class Tester {
     private static final double ansForFunction3 = 212.0 / 39;
 
     public static double eps = 0.00001d;
+
     public static Function<VectorNumbers, Double> function1 = v -> {
         double x = v.get(0);
         double y = v.get(1);
