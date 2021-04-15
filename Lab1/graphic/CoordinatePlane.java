@@ -10,7 +10,6 @@ import java.util.function.Function;
 
 public class CoordinatePlane {
     private final int INTERVAL_NUMBER = 30;
-    private final double STEP = 4;
     private final int STROKE_SIZE = 3;
 
     private int scale = 70;
@@ -31,15 +30,58 @@ public class CoordinatePlane {
     }
 
     private static class FuncWrap {
-        private Function<Double, Double> function;
-        private double x1 = -20;
-        private double x2 = 20;
+        private final Function<Double, Double> function;
+        private final double x1;
+        private final double x2;
+
+        private double searchL(double l, double r) {
+            if (r - l < 0.000001d) {
+                return r;
+            }
+            double mX = (l + r) / 2;
+            double mid = function.apply(mX);
+            if (Double.isNaN(mid)) {
+                return searchL(mX, r);
+            } else {
+                return searchL(l, mX);
+            }
+        }
+
+        private double searchR(double l, double r) {
+            if (r - l < 0.000001d) {
+                return l;
+            }
+            double mX = (l + r) / 2;
+            double mid = function.apply(mX);
+            if (Double.isNaN(mid)) {
+                return searchR(l, mX);
+            } else {
+                return searchR(mX, r);
+            }
+        }
 
         public FuncWrap(Function<Double, Double> function) {
             this.function = function;
             boolean setX1 = false;
-            boolean setX2 = false;
-            double step = 0.00001d;
+            double step = 0.1d;
+            double l1 = -100;
+            double r1 = 100;
+            for (double i = -100; i <= 100; i += step) {
+                double nextX = i + step;
+                double currentValue = function.apply(i);
+                double nextValue = function.apply(nextX);
+                if (!Double.isNaN(currentValue) && !setX1) {
+                    l1 = i - step;
+                    setX1 = true;
+                }
+                if (!Double.isNaN(currentValue) && Double.isNaN(nextValue)) {
+                    r1 = i + step;
+                    break;
+                }
+            }
+            x1 = searchL(l1, r1);
+            x2 = searchR(x1, 100);
+            /*
             for (double i = -10; i <= 100; i += step) {
                 double nextX = i + step;
                 double currentValue = function.apply(i);
@@ -52,7 +94,7 @@ public class CoordinatePlane {
                     x2 = i;
                     setX2 = true;
                 }
-            }
+            }*/
         }
 
         public Function<Double, Double> getFunction() {
@@ -144,7 +186,7 @@ public class CoordinatePlane {
 
     private void drawFunction(FuncWrap function, Graphics g) {
         Function<Double, Double> f = function.getFunction();
-        double step = 0.1d;
+        double step = 0.01d;
         for (double i = function.getX1(); i <= function.getX2(); i += step) {
             double currentValue = f.apply(i);
             double nextX = i + step;
