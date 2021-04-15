@@ -22,6 +22,7 @@ public class FastestGradient {
             vectors.add(x);
             alpha = methodGoldenRatio(a -> function.apply(gradient.evaluate(X).multiplyConst(-1 * a).add(X)), eps, 1, eps);
             if (alpha * gradient.module(X) < eps) {
+                System.out.println("more than 1000 iterations!");
                 return function.apply(X);
             }
             x = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
