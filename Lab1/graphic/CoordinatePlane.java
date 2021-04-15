@@ -20,7 +20,7 @@ public class CoordinatePlane {
     private double x_0;
     private double y_0;
 
-    private final ArrayList<Function<Double, Double>> FUNCTIONS;
+    private final ArrayList<FuncWrap> FUNCTIONS;
     private final ArrayList<VectorNumbers> VECTORS;
 
     public CoordinatePlane(double x_0, double y_0) {
@@ -30,8 +30,46 @@ public class CoordinatePlane {
         VECTORS = new ArrayList<>();
     }
 
+    private static class FuncWrap {
+        private Function<Double, Double> function;
+        private double x1 = -20;
+        private double x2 = 20;
+
+        public FuncWrap(Function<Double, Double> function) {
+            this.function = function;
+            boolean setX1 = false;
+            boolean setX2 = false;
+            double step = 0.00001d;
+            for (double i = -10; i <= 100; i += step) {
+                double nextX = i + step;
+                double currentValue = function.apply(i);
+                double nextValue = function.apply(nextX);
+                if (!Double.isNaN(currentValue) && !setX1) {
+                    x1 = i;
+                    setX1 = true;
+                }
+                if (!Double.isNaN(currentValue) && Double.isNaN(nextValue) && !setX2) {
+                    x2 = i;
+                    setX2 = true;
+                }
+            }
+        }
+
+        public Function<Double, Double> getFunction() {
+            return function;
+        }
+
+        public double getX1() {
+            return x1;
+        }
+
+        public double getX2() {
+            return x2;
+        }
+    }
+
     public void addFunction(Function<Double, Double> newFunction) {
-        FUNCTIONS.add(newFunction);
+        FUNCTIONS.add(new FuncWrap(newFunction));
     }
 
     public void addVector(VectorNumbers vector) {
@@ -85,16 +123,37 @@ public class CoordinatePlane {
         return (float) (y * scale + y_0);
     }
 
-    private void drawFunction(Function<Double, Double> function, Graphics g) {
-        for (double i = -INTERVAL_NUMBER * scale; i <= INTERVAL_NUMBER * scale; i += STEP) {
-            double currentX = i / scale;
-            double nextX = (i + STEP) / scale;
-            double currentValue = function.apply(currentX);
+    private double getStart(Function<Double, Double> function, Graphics g, double x1, double x2, boolean left) {
+        double step = 0.0001d;
+        for (double i = -x1; i <= x2; i += step) {
+            double nextX = i + step;
+            double currentValue = function.apply(i);
             double nextValue = function.apply(nextX);
-            if (!Double.isNaN(currentValue) && !Double.isNaN(nextValue)) {
-                g.drawLine(translateX(currentX), translateY(-currentValue),
-                        translateX(nextX), translateY(-nextValue));
+            if (left) {
+                if (!Double.isNaN(currentValue)) {
+                    return i;
+                }
+            } else {
+                if (!Double.isNaN(nextValue)) {
+                    return nextX;
+                }
             }
+        }
+        return left ? x1 : x2;
+    }
+
+    private void drawFunction(FuncWrap function, Graphics g) {
+        Function<Double, Double> f = function.getFunction();
+        double step = 0.1d;
+        for (double i = function.getX1(); i <= function.getX2(); i += step) {
+            double currentValue = f.apply(i);
+            double nextX = i + step;
+            if (nextX > function.getX2()) {
+                nextX = function.getX2();
+            }
+            double nextValue = f.apply(nextX);
+            g.drawLine(translateX(i), translateY(-currentValue),
+                    translateX(nextX), translateY(-nextValue));
         }
     }
 
@@ -162,6 +221,7 @@ public class CoordinatePlane {
             changeScale(-1);
         }
     }
+
     public void changeScale(int value) {
         if (scale > -value + 10 && scale < 400 - value) {
             scale += value;
