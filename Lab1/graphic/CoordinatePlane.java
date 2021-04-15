@@ -35,7 +35,7 @@ public class CoordinatePlane {
         private final double x2;
 
         private double searchL(double l, double r) {
-            if (r - l < 0.000001d) {
+            if (r - l < 0.0000001d) {
                 return r;
             }
             double mX = (l + r) / 2;
@@ -48,7 +48,7 @@ public class CoordinatePlane {
         }
 
         private double searchR(double l, double r) {
-            if (r - l < 0.000001d) {
+            if (r - l < 0.0000001d) {
                 return l;
             }
             double mX = (l + r) / 2;
