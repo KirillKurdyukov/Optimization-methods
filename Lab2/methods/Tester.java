@@ -2,6 +2,8 @@ package methods;
 
 import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class Tester {
     private static final double ansForFunction1 = -23799.0 / 127;
@@ -142,6 +144,7 @@ public class Tester {
     }
 
     private void test1() {
+        System.out.println("Testing method gradient descent.");
         System.out.println("Testing function one: f(x, y) = 64 * x * x + 126 * x * y + 64 * y * y - 10 * x + 30 * y + 13");
         testingGradientDescent(gradient1, function1, ansForFunction1);
         System.out.println("===========================================================================================");
@@ -154,6 +157,7 @@ public class Tester {
     }
 
     private void test2() {
+        System.out.println("Testing method fastest gradient.");
         System.out.println("Testing function one: f(x, y) = 64 * x * x + 126 * x * y + 64 * y * y - 10 * x + 30 * y + 13");
         testingFastestGradient(gradient1, function1, ansForFunction1, L1);
         System.out.println("===========================================================================================");
@@ -177,20 +181,39 @@ public class Tester {
         System.out.println("===========================================================================================");
     }
 
+    private void generation() {
+        for (int i = 10; i <= 10000; i *= 10) {
+            Gradient gradientN = new Gradient(IntStream
+                    .range(0, i)
+                    .mapToObj(index ->
+                         (Function<VectorNumbers, Double>) v -> 2 *  v.get(index)
+                         ).collect(Collectors.toList()));
+            Function<VectorNumbers, Double> functionN = v ->
+                v.stream()
+                        .map(element -> element * element)
+                        .reduce(Double::sum)
+                        .orElseThrow();
+            System.out.println(GradientDescent.run(eps, 2,  gradientN, new VectorNumbers(IntStream.range(0, i)
+                    .mapToObj(ind -> 1d)
+                    .collect(Collectors.toList())),
+                    functionN));
+        }
+    }
 
     public static void main(String[] args) {
-        Tester tester = new Tester();
-        tester.test1();
-        System.out.println("===========================================================================================");
-        System.out.println("===========================================================================================");
-        System.out.println("===========================================================================================");
-        System.out.println("===========================================================================================");
-        tester.test2();
-        System.out.println("===========================================================================================");
-        System.out.println("===========================================================================================");
-        System.out.println("===========================================================================================");
-        System.out.println("===========================================================================================");
-        tester.test3();
+         Tester tester = new Tester();
+//        tester.test1();
+//        System.out.println("===========================================================================================");
+//        System.out.println("===========================================================================================");
+//        System.out.println("===========================================================================================");
+//        System.out.println("===========================================================================================");
+//        tester.test2();
+//        System.out.println("===========================================================================================");
+//        System.out.println("===========================================================================================");
+//        System.out.println("===========================================================================================");
+//        System.out.println("===========================================================================================");
+//        tester.test3();
+        tester.generation();
     }
 
 }
