@@ -202,13 +202,28 @@ public class CoordinatePlane {
     }
 
     public void drawIntervals(Graphics g) {
-        for (int i = 0; i < VECTORS.size() - 1; i++) {
-            double currentX = VECTORS.get(i).get(0);
-            double nextX = VECTORS.get(i + 1).get(0);
-            double currentValue = VECTORS.get(i).get(1);
-            double nextValue = VECTORS.get(i + 1).get(1);
-            drawArrow(g, currentX, currentValue, nextX, nextValue);
+        if(VECTORS.isEmpty()) {
+            return;
         }
+        double currentX = 0;
+        double nextX = 0;
+        double currentValue = 0;
+        double nextValue = 0;
+        for (int i = 0; i < VECTORS.size() - 1; i++) {
+            currentX = VECTORS.get(i).get(0);
+            nextX = VECTORS.get(i + 1).get(0);
+            currentValue = VECTORS.get(i).get(1);
+            nextValue = VECTORS.get(i + 1).get(1);
+            drawArrow(g, currentX, currentValue, nextX, nextValue);
+            g.setColor(Color.blue);
+            g.drawString("x" + i, translateX(currentX), translateY(-currentValue));
+            g.setColor(Color.red);
+        }
+        drawArrow(g, currentX, currentValue, nextX, nextValue);
+        g.setColor(Color.blue);
+        g.drawString("x" + (VECTORS.size() - 1), translateX(nextX), translateY(-nextValue));
+        g.setColor(Color.red);
+
     }
 
     public int getScale() {
