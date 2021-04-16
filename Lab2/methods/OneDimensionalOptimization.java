@@ -1,7 +1,9 @@
 package methods;
 
 
+import javax.xml.crypto.dom.DOMCryptoContext;
 import java.util.ArrayList;
+import java.util.function.DoubleToLongFunction;
 import java.util.function.Function;
 
 public class OneDimensionalOptimization {
@@ -124,7 +126,11 @@ public class OneDimensionalOptimization {
         double x = (l + r) / 2;
         double fx = function.apply(x);
         while (r - l > eps) {
-            double u = x - (Math.pow(x - l, 2) * (fx - fr) - Math.pow(x - r, 2) * (fx - fl)) / (2 * ((x - l) * (fx - fr) - (x - r) * (fx - fl)));
+            double del = (2 * ((x - l) * (fx - fr) - (x - r) * (fx - fl)));
+            if (del == 0) {
+                return (l - r) / 2;
+            }
+            double u = x - ((x - l) * (x - l) * (fx - fr) - (x - r) * (x - r) * (fx - fl)) / del;
             double fu = function.apply(u);
             if (fu > fx) {
                 if (u > x) {
@@ -153,19 +159,21 @@ public class OneDimensionalOptimization {
         метод Брента.
      */
     public static Double methodBrent(Function<Double, Double> function,
-                               double l,
-                               double r,
+                               double a,
+                               double c,
                                double eps) {
         double k = (3 - Math.sqrt(5)) / 2;
-        double x, w, v;
-        double a = l;
-        double c = r;
+        double x, w, v, dLast = -1;
         x = w = v = (a + c) / 2;
         double fx, fw, fv;
         fx = fw = fv = function.apply(x);
         double d, e;
         d = e = c - a;
         while (d > eps) {
+            if (dLast == d) {
+                return x;
+            }
+            dLast = d;
             double g;
             g = e;
             e = d;
@@ -227,6 +235,6 @@ public class OneDimensionalOptimization {
                 }
             }
         }
-        return (a + c) / 2;
+        return x;
     }
 }
