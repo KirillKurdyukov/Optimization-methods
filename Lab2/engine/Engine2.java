@@ -1,10 +1,7 @@
 package engine;
 
 import graphic.CoordinatePlane;
-import methods.FastestGradient;
-import methods.Gradient;
-import methods.GradientDescent;
-import methods.VectorNumbers;
+import methods.*;
 import org.newdawn.slick.*;
 
 import java.util.ArrayList;
@@ -21,6 +18,9 @@ public class Engine2 extends BasicGame {
     public static FMode mode;
     private Function<VectorNumbers, Double> function;
     private Gradient gradient;
+    private double L;
+    private VectorNumbers b;
+    private SquareMatrix matrix;
 
     public Engine2(String title) {
         super(title);
@@ -61,12 +61,16 @@ public class Engine2 extends BasicGame {
             plane.clear();
             switch (currentMode) {
                 case FASTEST_GRADIENT:
-                    FastestGradient.run(function, gradient, 2);
+                    FastestGradient.run(function, gradient, L);
                     addFunctions(FastestGradient.vectors);
                     break;
                 case GRADIENT_DESCENT:
                     GradientDescent.run(function, gradient);
                     addFunctions(GradientDescent.vectors);
+                    break;
+                case CONJUGATE_GRADIENT:
+                    ConjugateGradient.run(matrix, b);
+                    addFunctions(ConjugateGradient.vectors);
             }
         }
     }
@@ -76,14 +80,23 @@ public class Engine2 extends BasicGame {
             case FUNCTION1:
                 function = function1;
                 gradient = gradient1;
+                L = L1;
+                b = b1;
+                matrix = matrix1;
                 break;
             case FUNCTION2:
                 function = function2;
                 gradient = gradient2;
+                L = L2;
+                b = b2;
+                matrix = matrix2;
                 break;
             default:
                 function = function3;
                 gradient = gradient3;
+                L = L3;
+                b = b3;
+                matrix = matrix3;
         }
     }
 

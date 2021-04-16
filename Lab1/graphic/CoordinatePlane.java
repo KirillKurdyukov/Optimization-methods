@@ -81,20 +81,6 @@ public class CoordinatePlane {
             }
             x1 = searchL(l1, r1);
             x2 = searchR(x1, 100);
-            /*
-            for (double i = -10; i <= 100; i += step) {
-                double nextX = i + step;
-                double currentValue = function.apply(i);
-                double nextValue = function.apply(nextX);
-                if (!Double.isNaN(currentValue) && !setX1) {
-                    x1 = i;
-                    setX1 = true;
-                }
-                if (!Double.isNaN(currentValue) && Double.isNaN(nextValue) && !setX2) {
-                    x2 = i;
-                    setX2 = true;
-                }
-            }*/
         }
 
         public Function<Double, Double> getFunction() {
