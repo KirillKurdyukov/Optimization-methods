@@ -31,6 +31,7 @@ public class FastestGradient {
             x = gradient.evaluate(x).multiplyConst(-1 * alpha).add(x);
         }
         vectors.add(x);
+        System.out.println(countIteration);
         return function.apply(x);
     }
 

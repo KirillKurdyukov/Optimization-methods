@@ -23,6 +23,7 @@ public class GradientDescent {
         while (module > eps) {
             vectors.add(x);
             VectorNumbers gradientVal = gradient.evaluate(x);
+            countIteration++;
             y = gradientVal.multiplyConst(-1 * alpha / module).add(x);
             while (function.apply(y) >= function.apply(x)) {
                 if (countIteration == 1000) {
@@ -37,6 +38,7 @@ public class GradientDescent {
             module = gradient.module(x);
         }
         vectors.add(x);
+        System.out.println(countIteration);
         return function.apply(x);
     }
 

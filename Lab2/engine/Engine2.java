@@ -24,7 +24,7 @@ public class Engine2 extends BasicGame {
 
     public Engine2(String title) {
         super(title);
-        currentMode = Mode2.FASTEST_GRADIENT;
+        currentMode = Mode2.GRADIENT_DESCENT;
         changeMode = new Button(75, 50, 150, 30, "Switch mode");
         changeFunc = new Button(75, 150, 150, 30, "Switch function");
         start = new Button(75, 100, 150, 30, "Draw");
