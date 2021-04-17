@@ -215,13 +215,9 @@ public class CoordinatePlane {
             currentValue = VECTORS.get(i).get(1);
             nextValue = VECTORS.get(i + 1).get(1);
             drawArrow(g, currentX, currentValue, nextX, nextValue);
-            g.setColor(Color.blue);
-            g.drawString("x" + i, translateX(currentX), translateY(-currentValue));
             g.setColor(Color.red);
         }
         drawArrow(g, currentX, currentValue, nextX, nextValue);
-        g.setColor(Color.blue);
-        g.drawString("x" + (VECTORS.size() - 1), translateX(nextX), translateY(-nextValue));
         g.setColor(Color.red);
 
     }

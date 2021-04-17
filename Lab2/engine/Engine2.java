@@ -4,6 +4,7 @@ import graphic.CoordinatePlane;
 import methods.*;
 import org.newdawn.slick.*;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.function.Function;
 
@@ -45,7 +46,7 @@ public class Engine2 extends BasicGame {
         setFunction();
     }
 
-    private void checkButtons(Input input) {
+    private void checkButtons(Input input) throws InvocationTargetException, IllegalAccessException {
         int x1 = input.getMouseX();
         int y1 = input.getMouseY();
         if (changeMode.isTouched(x1, y1)) {
@@ -135,7 +136,11 @@ public class Engine2 extends BasicGame {
     public void update(GameContainer gameContainer, int i) throws SlickException {
         Input input = gameContainer.getInput();
         if (input.isMousePressed(Input.MOUSE_LEFT_BUTTON)) {
-            checkButtons(input);
+            try {
+                checkButtons(input);
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                e.printStackTrace();
+            }
         }
         plane.changePlane(input);
     }

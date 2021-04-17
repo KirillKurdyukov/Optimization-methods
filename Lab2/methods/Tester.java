@@ -1,5 +1,9 @@
 package methods;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -118,16 +122,16 @@ public class Tester {
         }
     }
 
-    private void testingFastestGradient(Gradient g, Function<VectorNumbers, Double> f, double ans, double L) {
+    private void testingFastestGradient(Gradient g, Function<VectorNumbers, Double> f, double ans, double L) throws InvocationTargetException, IllegalAccessException {
         for (double eps = 0.0001; eps >= 0.000000001; eps /= 10) {
-                for (double x = 0; x < 3; x++)
-                    for (double y = 0; y < 3; y++)
-                        System.out.println(eps + " | " + ans + " == " + FastestGradient.run(eps,
-                                g,
-                                new VectorNumbers(List.of(x, y)),
-                                f,
-                                L)
-                        );
+            for (double x = 0; x < 3; x++)
+                for (double y = 0; y < 3; y++)
+                    System.out.println(eps + " | " + ans + " == " + FastestGradient.run(eps,
+                            g,
+                            new VectorNumbers(List.of(x, y)),
+                            f,
+                            L)
+                    );
         }
     }
 
@@ -156,7 +160,7 @@ public class Tester {
         System.out.println("===========================================================================================");
     }
 
-    private void test2() {
+    private void test2() throws InvocationTargetException, IllegalAccessException {
         System.out.println("Testing method fastest gradient.");
         System.out.println("Testing function one: f(x, y) = 64 * x * x + 126 * x * y + 64 * y * y - 10 * x + 30 * y + 13");
         testingFastestGradient(gradient1, function1, ansForFunction1, L1);
@@ -181,28 +185,37 @@ public class Tester {
         System.out.println("===========================================================================================");
     }
 
-    private void generation() {
+    private void generation() throws InvocationTargetException, IllegalAccessException {
         for (int i = 10; i <= 10000; i *= 10) {
+            System.out.println("i == " + i);
             Gradient gradientN = new Gradient(IntStream
                     .range(0, i)
                     .mapToObj(index ->
-                         (Function<VectorNumbers, Double>) v -> 2 *  v.get(index)
-                         ).collect(Collectors.toList()));
+                            (Function<VectorNumbers, Double>) v -> 2 * v.get(index)
+                    ).collect(Collectors.toList()));
             Function<VectorNumbers, Double> functionN = v ->
-                v.stream()
-                        .map(element -> element * element)
-                        .reduce(Double::sum)
-                        .orElseThrow();
-            System.out.println(GradientDescent.run(eps, 2,  gradientN, new VectorNumbers(IntStream.range(0, i)
-                    .mapToObj(ind -> 1d)
-                    .collect(Collectors.toList())),
-                    functionN));
+                    v.stream()
+                            .map(element -> element * element)
+                            .reduce(Double::sum)
+                            .orElseThrow();
+            System.out.println(FastestGradient.run(eps,  gradientN, new VectorNumbers(IntStream.range(0, i)
+                            .mapToObj(ind -> 1d)
+                            .collect(Collectors.toList())),
+                    functionN, 0.5d));
         }
     }
 
-    public static void main(String[] args) {
-         Tester tester = new Tester();
-//        tester.test1();
+    public void test4() throws InvocationTargetException, IllegalAccessException {
+        for (int i = 0; i < 5; i++) {
+            FastestGradient.setNumMethod(i);
+            FastestGradient.run(eps, gradient1, new VectorNumbers(List.of(0d, 0d)), function1, L1);
+        }
+    }
+
+    public static void main(String[] args) throws InvocationTargetException, IllegalAccessException {
+        Tester tester = new Tester();
+
+        //        tester.test1();
 //        System.out.println("===========================================================================================");
 //        System.out.println("===========================================================================================");
 //        System.out.println("===========================================================================================");
