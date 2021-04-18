@@ -1,5 +1,7 @@
 package methods;
 
+import engine.Mode;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.ArrayList;
@@ -12,7 +14,7 @@ import static methods.Tester.eps;
 public class ConjugateGradient {
     public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
 
-    public static VectorNumbers run(double eps, SquareMatrix A, VectorNumbers x, VectorNumbers b) {
+    public static VectorNumbers run(double eps, SquareMatrix A, VectorNumbers x, VectorNumbers b, Mode mode) {
         double alpha, beta;
         VectorNumbers p, p1, x1, grad, grad1, Apk;
         grad = A.multiply(x).add(b);
@@ -37,9 +39,9 @@ public class ConjugateGradient {
         }
     }
 
-    public static void run(SquareMatrix A, VectorNumbers b) {
+    public static void run(SquareMatrix A, VectorNumbers b, Mode mode) {
         vectors.clear();
-        run(eps, A, new VectorNumbers(List.of(0d, 0d)), b);
+        run(eps, A, new VectorNumbers(List.of(0d, 0d)), b, mode);
 
     }
 }

@@ -14,8 +14,10 @@ public class Engine2 extends BasicGame {
     CoordinatePlane plane;
     private final Button changeMode;
     private final Button changeFunc;
+    private final Button changeOneDim;
     private final Button start;
     private Mode2 currentMode;
+    private Mode currentOneDim;
     public static FMode mode;
     private Function<VectorNumbers, Double> function;
     private Gradient gradient;
@@ -27,8 +29,9 @@ public class Engine2 extends BasicGame {
         super(title);
         currentMode = Mode2.GRADIENT_DESCENT;
         changeMode = new Button(75, 50, 150, 30, "Switch mode");
-        changeFunc = new Button(75, 150, 150, 30, "Switch function");
         start = new Button(75, 100, 150, 30, "Draw");
+        changeFunc = new Button(75, 150, 150, 30, "Switch function");
+        changeOneDim = new Button(75, 200, 150, 30, "Switch method");
     }
 
     public static void main(String[] args) throws SlickException {
@@ -43,6 +46,7 @@ public class Engine2 extends BasicGame {
     public void init(GameContainer gameContainer) throws SlickException {
         plane = new CoordinatePlane(gameContainer.getWidth() / 2d, gameContainer.getHeight() / 2d);
         mode = FMode.FUNCTION1;
+        currentOneDim = Mode.DICHOTOMY;
         setFunction();
     }
 
@@ -53,6 +57,10 @@ public class Engine2 extends BasicGame {
             plane.clear();
             currentMode = Mode2.values()[(currentMode.ordinal() + 1) % Mode2.values().length];
         }
+        if (changeOneDim.isTouched(x1, y1)) {
+            plane.clear();
+            currentOneDim = Mode.values()[(currentOneDim.ordinal() + 1) % Mode.values().length];
+        }
         if (changeFunc.isTouched(x1, y1)) {
             plane.clear();
             mode = FMode.values()[(mode.ordinal() + 1) % FMode.values().length];
@@ -62,15 +70,15 @@ public class Engine2 extends BasicGame {
             plane.clear();
             switch (currentMode) {
                 case FASTEST_GRADIENT:
-                    FastestGradient.run(function, gradient, L);
+                    FastestGradient.run(function, gradient, L, currentOneDim);
                     addFunctions(FastestGradient.vectors);
                     break;
                 case GRADIENT_DESCENT:
-                    GradientDescent.run(function, gradient);
+                    GradientDescent.run(function, gradient, currentOneDim);
                     addFunctions(GradientDescent.vectors);
                     break;
                 case CONJUGATE_GRADIENT:
-                    ConjugateGradient.run(matrix, b);
+                    ConjugateGradient.run(matrix, b, currentOneDim);
                     addFunctions(ConjugateGradient.vectors);
             }
         }
@@ -151,10 +159,11 @@ public class Engine2 extends BasicGame {
         graphics.setBackground(Color.white);
         graphics.setColor(Color.black);
         plane.draw(graphics);
-        graphics.drawString("Mode: " + currentMode + " Function: " + mode, 10, 10);
+        graphics.drawString("Mode: " + currentMode + " Function: " + mode + " Method: " + currentOneDim, 10, 10);
         start.draw(graphics);
         changeMode.draw(graphics);
         changeFunc.draw(graphics);
+        changeOneDim.draw(graphics);
         graphics.clearWorldClip();
     }
 }

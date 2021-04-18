@@ -1,12 +1,33 @@
 package methods;
 
 
-import javax.xml.crypto.dom.DOMCryptoContext;
+import engine.Mode;
+
 import java.util.ArrayList;
-import java.util.function.DoubleToLongFunction;
 import java.util.function.Function;
 
 public class OneDimensionalOptimization {
+    public static Double methodByMod(Function<Double, Double> function,
+                                     double l,
+                                     double r,
+                                     double eps,
+                                     Mode mode) {
+        switch (mode) {
+            case DICHOTOMY:
+                return methodDichotomy(function, l, r, eps);
+            case GOLDEN_RATIO:
+                return methodGoldenRatio(function, l, r, eps);
+            case PARABOLAS:
+                return methodParabolas(function, l, r, eps);
+            case FIBONACCI_NUMBERS:
+                return methodFibonacciNumbers(function, l, r, eps);
+            case BRENT:
+                return methodBrent(function, l, r, eps);
+            default:
+                return 1d;
+        }
+
+    }
 
     /**
      * Метод дихотомии.
@@ -156,12 +177,12 @@ public class OneDimensionalOptimization {
     }
 
     /**
-        метод Брента.
+     * метод Брента.
      */
     public static Double methodBrent(Function<Double, Double> function,
-                               double a,
-                               double c,
-                               double eps) {
+                                     double a,
+                                     double c,
+                                     double eps) {
         double k = (3 - Math.sqrt(5)) / 2;
         double x, w, v, dLast = -1;
         x = w = v = (a + c) / 2;

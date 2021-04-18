@@ -1,6 +1,7 @@
 package methods;
 
 import engine.Engine2;
+import engine.Mode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,7 @@ public class GradientDescent {
                              double alpha,
                              Gradient gradient,
                              VectorNumbers x,
-                             Function<VectorNumbers, Double> function) {
+                             Function<VectorNumbers, Double> function, Mode mode) {
         int countIteration = 0;
         VectorNumbers y;
         double module = gradient.module(x);
@@ -42,8 +43,8 @@ public class GradientDescent {
         return function.apply(x);
     }
 
-    public static void run(Function<VectorNumbers, Double> function, Gradient gradient) {
+    public static void run(Function<VectorNumbers, Double> function, Gradient gradient, Mode mode) {
         vectors.clear();
-        run(eps, 10, gradient, new VectorNumbers(List.of(0d, 0d)), function);
+        run(eps, 10, gradient, new VectorNumbers(List.of(0d, 0d)), function, mode);
     }
 }
