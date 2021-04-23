@@ -1,13 +1,10 @@
 package methods;
 
-import engine.Engine2;
 import engine.Mode;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-
-import static methods.Tester.*;
 
 public class GradientDescent {
 
@@ -43,7 +40,7 @@ public class GradientDescent {
         return function.apply(x);
     }
 
-    public static void run(Function<VectorNumbers, Double> function, Gradient gradient, Mode mode) {
+    public static void run(Function<VectorNumbers, Double> function, Gradient gradient, Mode mode, Double eps) {
         vectors.clear();
         run(eps, 10, gradient, new VectorNumbers(List.of(0d, 0d)), function, mode);
     }

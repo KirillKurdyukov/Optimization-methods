@@ -3,9 +3,11 @@ package engine;
 import graphic.CoordinatePlane;
 import methods.*;
 import org.newdawn.slick.*;
+import org.newdawn.slick.gui.TextField;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 import static methods.Tester.*;
@@ -16,6 +18,7 @@ public class Engine2 extends BasicGame {
     private final Button changeFunc;
     private final Button changeOneDim;
     private final Button start;
+    private final Button nextIter;
     private Mode2 currentMode;
     private Mode currentOneDim;
     public static FMode mode;
@@ -24,6 +27,9 @@ public class Engine2 extends BasicGame {
     private double L;
     private VectorNumbers b;
     private SquareMatrix matrix;
+    private TextField field1;
+    private TextField field2;
+    private double eps = Tester.eps;
 
     public Engine2(String title) {
         super(title);
@@ -32,6 +38,7 @@ public class Engine2 extends BasicGame {
         start = new Button(75, 100, 150, 30, "Draw");
         changeFunc = new Button(75, 150, 150, 30, "Switch function");
         changeOneDim = new Button(75, 200, 150, 30, "Switch method");
+        nextIter = new Button(75, 250, 150, 30, "Next iteration");
     }
 
     public static void main(String[] args) throws SlickException {
@@ -44,15 +51,39 @@ public class Engine2 extends BasicGame {
 
     @Override
     public void init(GameContainer gameContainer) throws SlickException {
+        field1 = new TextField(gameContainer, gameContainer.getDefaultFont(), 0, 280, 150, 30);
         plane = new CoordinatePlane(gameContainer.getWidth() / 2d, gameContainer.getHeight() / 2d);
         mode = FMode.FUNCTION1;
         currentOneDim = Mode.DICHOTOMY;
         setFunction();
     }
 
+    private void setEps() {
+        if (field1.getText().length() == 0) {
+            return;
+        }
+        Double a = null;
+        try {
+            a = Double.valueOf(field1.getText());
+        } catch (NumberFormatException ignored) {
+            System.out.println("Print correct format");
+        }
+        if (a != null) {
+            if (a <= 0.0001 && a >= 0.000000001) {
+                eps = a;
+            } else {
+                System.out.println("Should be in diapason [0.000000001, 0.0001]");
+            }
+        }
+        field1.setText("");
+    }
+
     private void checkButtons(Input input) throws InvocationTargetException, IllegalAccessException {
         int x1 = input.getMouseX();
         int y1 = input.getMouseY();
+        if (nextIter.isTouched(x1, y1)) {
+            plane.nextIteration();
+        }
         if (changeMode.isTouched(x1, y1)) {
             plane.clear();
             currentMode = Mode2.values()[(currentMode.ordinal() + 1) % Mode2.values().length];
@@ -65,20 +96,21 @@ public class Engine2 extends BasicGame {
             plane.clear();
             mode = FMode.values()[(mode.ordinal() + 1) % FMode.values().length];
         }
+        setEps();
         setFunction();
         if (start.isTouched(x1, y1)) {
             plane.clear();
             switch (currentMode) {
                 case FASTEST_GRADIENT:
-                    FastestGradient.run(function, gradient, L, currentOneDim);
+                    FastestGradient.run(function, gradient, L, currentOneDim, eps);
                     addFunctions(FastestGradient.vectors);
                     break;
                 case GRADIENT_DESCENT:
-                    GradientDescent.run(function, gradient, currentOneDim);
+                    GradientDescent.run(function, gradient, currentOneDim, eps);
                     addFunctions(GradientDescent.vectors);
                     break;
                 case CONJUGATE_GRADIENT:
-                    ConjugateGradient.run(matrix, b, currentOneDim);
+                    ConjugateGradient.run(matrix, b, currentOneDim, eps);
                     addFunctions(ConjugateGradient.vectors);
             }
         }
@@ -132,11 +164,21 @@ public class Engine2 extends BasicGame {
     }
 
     private void addFunctions(ArrayList<VectorNumbers> functions) {
-        for (VectorNumbers vectorNumber : functions) {
+        for (int i = 0; i < functions.size(); i++) {
+            VectorNumbers vectorNumber = functions.get(i);
             plane.addVector(vectorNumber);
             double z = function.apply(vectorNumber);
-            plane.addFunction(first(z));
-            plane.addFunction(second(z));
+            var a = first(z);
+            var b = second(z);
+            plane.addFunction(a);
+            plane.addFunction(b);
+            ArrayList<VectorNumbers> vectorNumbers = new ArrayList<>();
+            vectorNumbers.add(vectorNumber);
+            if (i < functions.size() - 1) {
+                vectorNumbers.add(functions.get(i + 1));
+            }
+            plane.addIteration(List.of(first(z), second(z)), vectorNumbers);
+
         }
     }
 
@@ -164,6 +206,8 @@ public class Engine2 extends BasicGame {
         changeMode.draw(graphics);
         changeFunc.draw(graphics);
         changeOneDim.draw(graphics);
+        nextIter.draw(graphics);
+        field1.render(gameContainer, graphics);
         graphics.clearWorldClip();
     }
 }

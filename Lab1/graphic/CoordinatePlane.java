@@ -6,6 +6,7 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Function;
 
 public class CoordinatePlane {
@@ -15,18 +16,30 @@ public class CoordinatePlane {
     private int scale = 70;
 
     private final int RADIUS = scale * INTERVAL_NUMBER + 1000;
-
+    private int currentIter;
     private double x_0;
     private double y_0;
-
+    private final ArrayList<Iteration> iterations;
     private final ArrayList<FuncWrap> FUNCTIONS;
     private final ArrayList<VectorNumbers> VECTORS;
+
+    private static class Iteration {
+        ArrayList<FuncWrap> functions;
+        ArrayList<VectorNumbers> vectors;
+
+        public Iteration(ArrayList<FuncWrap> functions, ArrayList<VectorNumbers> vectors) {
+            this.functions = functions;
+            this.vectors = vectors;
+        }
+    }
 
     public CoordinatePlane(double x_0, double y_0) {
         this.x_0 = x_0;
         this.y_0 = y_0;
+        currentIter = -1;
         FUNCTIONS = new ArrayList<>();
         VECTORS = new ArrayList<>();
+        iterations = new ArrayList<>();
     }
 
     private static class FuncWrap {
@@ -100,6 +113,14 @@ public class CoordinatePlane {
         FUNCTIONS.add(new FuncWrap(newFunction));
     }
 
+    public void addIteration(List<Function<Double, Double>> functions, ArrayList<VectorNumbers> vectors) {
+        ArrayList<FuncWrap> funcWraps = new ArrayList<>();
+        for (var f : functions) {
+            funcWraps.add(new FuncWrap(f));
+        }
+        iterations.add(new Iteration(funcWraps, vectors));
+    }
+
     public void addVector(VectorNumbers vector) {
         VECTORS.add(vector);
     }
@@ -135,12 +156,49 @@ public class CoordinatePlane {
 
     public void draw(Graphics g) {
         drawAxis(g);
-        for (var function : FUNCTIONS) {
+        ArrayList<FuncWrap> fs;
+        ArrayList<VectorNumbers> vs;
+        if (currentIter == -1) {
+            fs = FUNCTIONS;
+            vs = VECTORS;
+        } else {
+            fs = iterations.get(currentIter).functions;
+            vs = iterations.get(currentIter).vectors;
+        }
+        for (var function : fs) {
             drawFunction(function, g);
         }
         g.setColor(Color.red);
-        drawIntervals(g);
+        drawIntervals(g, vs);
         g.setColor(Color.black);
+    }
+
+    public void drawIntervals(Graphics g, ArrayList<VectorNumbers> vectors) {
+        if (vectors.isEmpty()) {
+            return;
+        }
+        double currentX = 0;
+        double nextX = 0;
+        double currentValue = 0;
+        double nextValue = 0;
+        for (int i = 0; i < vectors.size() - 1; i++) {
+            currentX = vectors.get(i).get(0);
+            nextX = vectors.get(i + 1).get(0);
+            currentValue = vectors.get(i).get(1);
+            nextValue = vectors.get(i + 1).get(1);
+            drawArrow(g, currentX, currentValue, nextX, nextValue);
+            g.setColor(Color.red);
+        }
+        drawArrow(g, currentX, currentValue, nextX, nextValue);
+        g.setColor(Color.red);
+
+    }
+
+    public void nextIteration() {
+        if (iterations.size() == 0) {
+            return;
+        }
+        currentIter = (currentIter + 1) % iterations.size();
     }
 
     public float translateX(double x) {
@@ -201,27 +259,6 @@ public class CoordinatePlane {
                 -newCos2 + translateX(x2), newSin2 + translateY(-y2));
     }
 
-    public void drawIntervals(Graphics g) {
-        if(VECTORS.isEmpty()) {
-            return;
-        }
-        double currentX = 0;
-        double nextX = 0;
-        double currentValue = 0;
-        double nextValue = 0;
-        for (int i = 0; i < VECTORS.size() - 1; i++) {
-            currentX = VECTORS.get(i).get(0);
-            nextX = VECTORS.get(i + 1).get(0);
-            currentValue = VECTORS.get(i).get(1);
-            nextValue = VECTORS.get(i + 1).get(1);
-            drawArrow(g, currentX, currentValue, nextX, nextValue);
-            g.setColor(Color.red);
-        }
-        drawArrow(g, currentX, currentValue, nextX, nextValue);
-        g.setColor(Color.red);
-
-    }
-
     public int getScale() {
         return scale;
     }
@@ -268,7 +305,9 @@ public class CoordinatePlane {
     }
 
     public void clear() {
+        iterations.clear();
         FUNCTIONS.clear();
         VECTORS.clear();
+        currentIter = -1;
     }
 }

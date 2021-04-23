@@ -2,14 +2,8 @@ package methods;
 
 import engine.Mode;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
-
-import static methods.Tester.eps;
 
 public class ConjugateGradient {
     public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
@@ -39,7 +33,7 @@ public class ConjugateGradient {
         }
     }
 
-    public static void run(SquareMatrix A, VectorNumbers b, Mode mode) {
+    public static void run(SquareMatrix A, VectorNumbers b, Mode mode, Double eps) {
         vectors.clear();
         run(eps, A, new VectorNumbers(List.of(0d, 0d)), b, mode);
 
