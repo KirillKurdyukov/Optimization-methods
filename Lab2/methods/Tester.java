@@ -1,9 +1,8 @@
 package methods;
 
+import engine.Mode;
+
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -116,7 +115,7 @@ public class Tester {
                                 alpha,
                                 g,
                                 new VectorNumbers(List.of(x, y)),
-                                f)
+                                f, Mode.GOLDEN_RATIO)
                         );
             }
         }
@@ -130,7 +129,7 @@ public class Tester {
                             g,
                             new VectorNumbers(List.of(x, y)),
                             f,
-                            L)
+                            L, Mode.GOLDEN_RATIO)
                     );
         }
     }
@@ -142,7 +141,7 @@ public class Tester {
                     System.out.println(eps + " | " + ans + " == " + f.apply(ConjugateGradient.run(eps,
                             A,
                             new VectorNumbers(List.of(x, y)),
-                            b))
+                            b, Mode.GOLDEN_RATIO))
                     );
         }
     }
@@ -198,17 +197,17 @@ public class Tester {
                             .map(element -> element * element)
                             .reduce(Double::sum)
                             .orElseThrow();
-            System.out.println(FastestGradient.run(eps,  gradientN, new VectorNumbers(IntStream.range(0, i)
+            System.out.println(FastestGradient.run(eps, gradientN, new VectorNumbers(IntStream.range(0, i)
                             .mapToObj(ind -> 1d)
                             .collect(Collectors.toList())),
-                    functionN, 0.5d));
+                    functionN, 0.5d, Mode.GOLDEN_RATIO));
         }
     }
 
     public void test4() throws InvocationTargetException, IllegalAccessException {
         for (int i = 0; i < 5; i++) {
             FastestGradient.setNumMethod(i);
-            FastestGradient.run(eps, gradient1, new VectorNumbers(List.of(0d, 0d)), function1, L1);
+            FastestGradient.run(eps, gradient1, new VectorNumbers(List.of(0d, 0d)), function1, L1, Mode.GOLDEN_RATIO);
         }
     }
 
