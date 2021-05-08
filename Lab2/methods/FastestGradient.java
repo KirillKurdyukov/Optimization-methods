@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-import static methods.Tester.eps;
-
 public class FastestGradient {
     public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
     private static int numMethod = 3;
@@ -41,7 +39,7 @@ public class FastestGradient {
             final VectorNumbers X = x;
             vectors.add(x);
             alpha = OneDimensionalOptimization.methodByMod(a -> function.apply(gradient.evaluate(X).
-                    multiplyConst(-1 * a).add(X)), 0, L / 2, eps,mode);
+                    multiplyConst(-1 * a).add(X)), 0, L / 2, eps, mode);
             if (countIteration == 1000) {
                 System.out.println("more than 1000 iterations!");
                 return function.apply(X);
@@ -54,7 +52,7 @@ public class FastestGradient {
         return function.apply(x);
     }
 
-    public static void run(Function<VectorNumbers, Double> function, Gradient gradient, double L, Mode mode) throws InvocationTargetException, IllegalAccessException {
+    public static void run(Function<VectorNumbers, Double> function, Gradient gradient, double L, Mode mode, Double eps) throws InvocationTargetException, IllegalAccessException {
         vectors.clear();
         run(eps, gradient, new VectorNumbers(List.of(0d, 0d)), function, L, mode);
 
