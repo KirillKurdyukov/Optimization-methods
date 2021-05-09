@@ -26,7 +26,6 @@ public class Main {
 
     private static void process(String arg) throws MatrixReadFileException {
         Matrix denseMatrix;
-        VectorNumbers b;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of(arg))) {
             String currentLine;
             try {
@@ -45,12 +44,6 @@ public class Main {
                         .split(" ")
                 ).map(Double::parseDouble)
                         .collect(Collectors.toList())));
-                VectorNumbers answer = new VectorNumbers(Collections.nCopies(size, null));
-                switch (gauss(denseMatrix, answer)) {
-                    case 0 -> System.out.println("no solutions");
-                    case 1 -> System.out.println("many solutions");
-                    case 2 -> answer.output();
-                }
             } catch (IOException | NumberFormatException e) {
                 throw new MatrixReadFileException("Error while reading file. " + e.getMessage());
             }
@@ -58,6 +51,14 @@ public class Main {
                 IOException e) {
             throw new MatrixReadFileException("Input file error. " + e.getMessage());
         }
+
+        VectorNumbers answer = new VectorNumbers(Collections.nCopies(denseMatrix.size(), null));
+        switch (gauss(denseMatrix, answer)) {
+            case 0 -> System.out.println("no solutions");
+            case 1 -> System.out.println("many solutions");
+            case 2 -> answer.output();
+        }
+
     }
 
     /*
