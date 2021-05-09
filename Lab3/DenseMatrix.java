@@ -26,7 +26,7 @@ public class DenseMatrix implements Matrix {
 
     @Override
     public void setFreeVectorNum(int i, double el) {
-        freeVector.set(i ,el);
+        freeVector.toSet(i ,el);
     }
 
     @Override

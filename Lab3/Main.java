@@ -85,7 +85,7 @@ public class Main {
         for (int row = size - 1; row > 0; row--)
             madeDiagView(matrix, row);
         IntStream.range(0, size).forEach(i ->
-                answer.set(i, matrix.getFreeVector(i) / matrix.get(i, i))
+                answer.toSet(i, matrix.getFreeVector(i) / matrix.get(i, i))
         );
         return 2;
     }
