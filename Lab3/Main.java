@@ -70,7 +70,7 @@ public class Main {
         int size = matrix.size();
         for (int col = 0, row = 0; col < size && row < size; row++) {
             col = row;
-            while (!pivoting(matrix, row, col) && col < size)
+            while (col < size && !pivoting(matrix, row, col))
                 col++;
             if (col < size)
                 if (madeTriangularView(matrix, row, col))
@@ -155,6 +155,6 @@ public class Main {
             if (Math.abs(matrix.get(row, i)) > eps)
                 return false;
         }
-        return !(Math.abs(matrix.get(row, size)) <= eps);
+        return !(Math.abs(matrix.getFreeVector(row)) <= eps);
     }
 }
