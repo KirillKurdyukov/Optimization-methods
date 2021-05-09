@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,6 +45,12 @@ public class Main {
                         .split(" ")
                 ).map(Double::parseDouble)
                         .collect(Collectors.toList())));
+                VectorNumbers answer = new VectorNumbers(Collections.nCopies(size, null));
+                switch (gauss(denseMatrix, answer)) {
+                    case 0 -> System.out.println("no solutions");
+                    case 1 -> System.out.println("many solutions");
+                    case 2 -> answer.output();
+                }
             } catch (IOException | NumberFormatException e) {
                 throw new MatrixReadFileException("Error while reading file. " + e.getMessage());
             }
@@ -53,7 +60,12 @@ public class Main {
         }
     }
 
-    private int gauss(Matrix matrix, VectorNumbers answer) {
+    /*
+    0 - no solutions
+    1 - many solutions
+    2 - one solution
+     */
+    private static int gauss(Matrix matrix, VectorNumbers answer) {
         int size = matrix.size();
         for (int col = 0, row = 0; col < size && row < size; row++) {
             col = row;
@@ -78,7 +90,7 @@ public class Main {
         return 2;
     }
 
-    void madeDiagView(Matrix matrix, int col) {
+    private static void madeDiagView(Matrix matrix, int col) {
         for (int i = col - 1; i >= 0; i--) {
             double delta = matrix.get(i, col) / matrix.get(col, col);
             matrix.set(i, col, matrix.get(i, col) - delta * matrix.get(col, col));
@@ -86,7 +98,7 @@ public class Main {
         }
     }
 
-    private boolean checkManySolution(Matrix matrix, int row) {
+    private static boolean checkManySolution(Matrix matrix, int row) {
         int size = matrix.size();
         for (int i = 0; i < size; i++) {
             if (Math.abs(matrix.get(row, i)) > eps)
@@ -94,7 +106,7 @@ public class Main {
         }
         return true;
     }
-    private boolean pivoting(Matrix matrix, int row, int col) {
+    private static boolean pivoting(Matrix matrix, int row, int col) {
         int maxLineIndex = row;
         double localMax = 0.0;
         for (int i = row; i < matrix.size(); i++) {
@@ -109,7 +121,7 @@ public class Main {
         return true;
     }
 
-    private boolean madeTriangularView(Matrix matrix, int row, int col) {
+    private static boolean madeTriangularView(Matrix matrix, int row, int col) {
         int size = matrix.size();
         for (int i = row + 1; i < size; i++) {
             double delta = matrix.get(i, col) / matrix.get(row, col);
@@ -136,7 +148,7 @@ public class Main {
     }
 
 
-    private boolean checkIncompatibleLine(Matrix matrix, int row) {
+    private static boolean checkIncompatibleLine(Matrix matrix, int row) {
         int size = matrix.size();
         for (int i = 0; i < size; i++) {
             if (Math.abs(matrix.get(row, i)) > eps)
