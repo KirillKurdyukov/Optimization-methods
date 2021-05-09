@@ -15,6 +15,10 @@ public abstract class Vector <T> extends AbstractList<T> {
         return arguments.get(i);
     }
 
+    public void toSet(int i, T el) {
+        arguments.set(i, el);
+    }
+
     public int size() {
         return arguments.size();
     }
