@@ -36,7 +36,6 @@ public class DenseMatrix implements Matrix {
         matrix[j] = temp;
     }
 
-
     public double get(int i, int j) {
         return matrix[i][j];
     }
