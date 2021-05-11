@@ -4,75 +4,59 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class ProfileMatrix implements Matrix {
-    private final double[] matrix;
-    private final int[] pointers;
+    private final double[] diag;
+    private final double[] al;
+    private final double[] au;
+    private final int[] ial;
+    private final int[] iau;
 
     public ProfileMatrix(double[][] matrix) {
-        ArrayList<Double> elements = new ArrayList<>();
-        ArrayList<Integer> pointers = new ArrayList<>();
+        diag = new double[matrix.length];
+        ArrayList<Double> al1 = new ArrayList<>();
+        ArrayList<Integer> ial1 = new ArrayList<>();
+        ArrayList<Double> au1 = new ArrayList<>();
+        ArrayList<Integer> iau1 = new ArrayList<>();
         for (int i = 0; i < matrix.length; i++) {
-            for (int j = 0; j <= i; j++) {
-                if (matrix[i][j] != 0) {
-                    elements.add(matrix[i][j]);
-                    if (pointers.size() == i) {
-                        pointers.add(j);
-                    }
-                }
+            diag[i] = matrix[i][i];
+            for (int j = 0; j < i; j++) {
+                al1.add(matrix[i][j]);
+                au1.add(matrix[j][i]);
             }
+            ial1.add(al1.size());
+            iau1.add(au1.size());
         }
-        this.matrix = elements.stream().mapToDouble(i -> i).toArray();
-        this.pointers = pointers.stream().mapToInt(i -> i).toArray();
+        al = al1.stream().mapToDouble(i -> i).toArray();
+        au = au1.stream().mapToDouble(i -> i).toArray();
+        ial = ial1.stream().mapToInt(i -> i).toArray();
+        iau = iau1.stream().mapToInt(i -> i).toArray();
     }
 
     @Override
     public int size() {
-        return pointers.length;
-    }
-
-    private int getPointer(int i, int j) {
-        int pos = 0;
-        for (int k = 0; k < i; k++) {
-            pos += (k - pointers[k]) + 1;
-        }
-        return pos + j;
+        return diag.length;
     }
 
     private double getElement(int i, int j) {
-        return matrix[getPointer(i, j)];
+        return 0;
     }
 
     @Override
     public double get(int i, int j) {
-        if (pointers[i] <= j && j <= i) {
-            return getElement(i, j);
-        } else {
-            return 0;
-        }
+        return 0;
     }
 
     public static void main(String[] args) {
         ProfileMatrix m = new ProfileMatrix(new double[][]{{1, 1, 1}, {0, 2, 2}, {3, 3, 3}});
-        System.out.println(Arrays.toString(m.matrix) + "  " + Arrays.toString(m.pointers));
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                m.set(i, j, 6);
-            }
-            System.out.println();
-        }
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < 3; j++) {
-                System.out.print(m.get(i, j) + " ");
-            }
-            System.out.println();
-        }
+        System.out.println(Arrays.toString(m.diag));
+        System.out.println(Arrays.toString(m.al));
+        System.out.println(Arrays.toString(m.au));
+        System.out.println(Arrays.toString(m.ial));
+        System.out.println(Arrays.toString(m.iau));
+
     }
 
     @Override
     public void set(int i, int j, double element) {
-        if (pointers[i] > j || j > i) {
-            return;
-        }
-        matrix[getPointer(i, j)] = element;
     }
 
     @Override
