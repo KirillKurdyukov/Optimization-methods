@@ -1,81 +1,136 @@
-import methods.VectorNumbers;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-
-public class ProfileMatrix implements Matrix {
+public class ProfileMatrix {
     private final double[] diag;
     private final double[] al;
     private final double[] au;
     private final int[] ial;
     private final int[] iau;
+    private boolean isLU = false;
 
-    public ProfileMatrix(double[][] matrix) {
-        diag = new double[matrix.length];
-        ArrayList<Double> al1 = new ArrayList<>();
-        ArrayList<Integer> ial1 = new ArrayList<>();
-        ArrayList<Double> au1 = new ArrayList<>();
-        ArrayList<Integer> iau1 = new ArrayList<>();
-        for (int i = 0; i < matrix.length; i++) {
-            diag[i] = matrix[i][i];
-            for (int j = 0; j < i; j++) {
-                al1.add(matrix[i][j]);
-                au1.add(matrix[j][i]);
-            }
-            ial1.add(al1.size());
-            iau1.add(au1.size());
-        }
-        al = al1.stream().mapToDouble(i -> i).toArray();
-        au = au1.stream().mapToDouble(i -> i).toArray();
-        ial = ial1.stream().mapToInt(i -> i).toArray();
-        iau = iau1.stream().mapToInt(i -> i).toArray();
+    public ProfileMatrix(double[] diag, double[] al, int[] ial, double[] au, int[] iau) {
+        this.diag = diag;
+        this.al = al;
+        this.ial = ial;
+        this.au = au;
+        this.iau = iau;
     }
 
-    @Override
     public int size() {
         return diag.length;
     }
 
-    private double getElement(int i, int j) {
-        return 0;
+    public double get(int i, int j) throws MatrixFormatException {
+        if (isLU) {
+            throw new MatrixFormatException("LU modification was made");
+        }
+        if (i == j) {
+            return diag[i];
+        }
+        if (i > j) {
+            return getByParams(al, ial, i, j);
+        }
+        return getByParams(au, iau, j, i);
     }
 
-    @Override
-    public double get(int i, int j) {
-        return 0;
+    public double getFromL(int i, int j) throws MatrixFormatException {
+        if (!isLU) {
+            throw new MatrixFormatException("LU modification wasn't made");
+        }
+        if (i == j) {
+            return diag[i];
+        }
+        if (i > j) {
+            return getByParams(al, ial, i, j);
+        }
+        return 0.0;
     }
 
-    public static void main(String[] args) {
-        ProfileMatrix m = new ProfileMatrix(new double[][]{{1, 1, 1}, {0, 2, 2}, {3, 3, 3}});
-        System.out.println(Arrays.toString(m.diag));
-        System.out.println(Arrays.toString(m.al));
-        System.out.println(Arrays.toString(m.au));
-        System.out.println(Arrays.toString(m.ial));
-        System.out.println(Arrays.toString(m.iau));
-
+    public double getFromU(int i, int j) throws MatrixFormatException {
+        if (!isLU) {
+            throw new MatrixFormatException("LU modification wasn't made");
+        }
+        if (i == j) {
+            return 1.0;
+        }
+        if (i < j) {
+            return getByParams(au, iau, j, i);
+        }
+        return 0.0;
     }
 
-    @Override
-    public void set(int i, int j, double element) {
+    private double getByParams(double[] matrix, int[] indexes, int i, int j) {
+        int size = indexes[i] - indexes[i - 1];
+        int index = j - (i - size + 1);
+        if (index < 0) {
+            return 0;
+        }
+        return matrix[indexes[i - 1] + 1 + index];
     }
 
-    @Override
-    public void setFreeVector(VectorNumbers b) {
-
+    private void setByParams(double[] matrix, int[] indexes, int i, int j, double value) {
+        if (i == j) {
+            diag[i] = value;
+        }
+        int size = indexes[i] - indexes[i - 1];
+        int index = j - (i - size + 1);
+        matrix[indexes[i - 1] + 1 + index] = value;
     }
 
-    @Override
-    public double getFreeVector(int i) {
-        return 0;
+    public void LUDecomposition() throws MatrixFormatException {
+        if (isLU) {
+            throw new MatrixFormatException("LU modification was made");
+        }
+        for (int i = 1; i < size(); i++) {
+            for (int j = 0; j <= i; j++) {
+                double sum = 0;
+                for (int k = 0; k < j; k++) {
+                    sum += this.get(i, k) * this.get(k, j);
+                }
+                setByParams(al, ial, i, j, this.get(i, j) - sum);
+            }
+            for (int j = 0; j < i; j++) {
+                double sum = 0;
+                for (int k = 0; k < j; k++) {
+                    sum += this.get(j, k) * this.get(k, i);
+                }
+                setByParams(au, iau, i, j, (this.get(j, i) - sum) / this.get(j, j));
+            }
+        }
+        this.isLU = true;
     }
 
-    @Override
-    public void setFreeVectorNum(int i, double el) {
-
-    }
-
-    @Override
-    public void swapRow(int i, int j) {
-
+    public static void main(String[] args) throws Exception {
+        /*
+        1, 2, 3
+        0, 2, 0
+        1, 2, 3
+         */
+        double[] diag = {1.0, 2.0, 3.0};
+        double[] al = {1.0, 2.0, 1.0, 2.0, 3.0};
+        double[] au = {1.0, 2.0, 2.0, 3.0, 0.0, 3.0};
+        int[] ial = {0, 1, 4};
+        int[] iau = {0, 2, 5};
+        ProfileMatrix profileMatrix = new ProfileMatrix(diag, al, ial, au, iau);
+        int sz = profileMatrix.size();
+        for (int i = 0; i < sz; i++) {
+            for (int j = 0; j < sz; j++) {
+                System.out.print(profileMatrix.get(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        profileMatrix.LUDecomposition();
+        for (int i = 0; i < sz; i++) {
+            for (int j = 0; j < sz; j++) {
+                System.out.print(profileMatrix.getFromL(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+        for (int i = 0; i < sz; i++) {
+            for (int j = 0; j < sz; j++) {
+                System.out.print(profileMatrix.getFromU(i, j) + " ");
+            }
+            System.out.println();
+        }
     }
 }
