@@ -1,23 +1,23 @@
 package format;
 
 public class ProfileMatrix {
-    private final double[] diag;
-    private final double[] al;
-    private final double[] au;
-    private final int[] ial;
-    private final int[] iau;
+    private final double[] D;
+    private final double[] L;
+    private final double[] U;
+    private final int[] IL;
+    private final int[] IU;
     private boolean isLU = false;
 
-    public ProfileMatrix(double[] diag, double[] al, int[] ial, double[] au, int[] iau) {
-        this.diag = diag;
-        this.al = al;
-        this.ial = ial;
-        this.au = au;
-        this.iau = iau;
+    public ProfileMatrix(double[] D, double[] L, int[] IL, double[] U, int[] IU) {
+        this.D = D;
+        this.L = L;
+        this.IL = IL;
+        this.U = U;
+        this.IU = IU;
     }
 
     public int size() {
-        return diag.length;
+        return D.length;
     }
 
     public double get(int i, int j) throws MatrixFormatException {
@@ -25,12 +25,12 @@ public class ProfileMatrix {
             throw new MatrixFormatException("LU modification was made");
         }
         if (i == j) {
-            return diag[i];
+            return D[i];
         }
         if (i > j) {
-            return getByParams(al, ial, i, j);
+            return getByParams(L, IL, i, j);
         }
-        return getByParams(au, iau, j, i);
+        return getByParams(U, IU, j, i);
     }
 
     public double getFromL(int i, int j) throws MatrixFormatException {
@@ -41,7 +41,7 @@ public class ProfileMatrix {
             return 1.0;
         }
         if (i > j) {
-            return getByParams(al, ial, i, j);
+            return getByParams(L, IL, i, j);
         }
         return 0.0;
     }
@@ -51,10 +51,10 @@ public class ProfileMatrix {
             throw new MatrixFormatException("LU modification wasn't made");
         }
         if (i == j) {
-            return diag[i];
+            return D[i];
         }
         if (i < j) {
-            return getByParams(au, iau, j, i);
+            return getByParams(U, IU, j, i);
         }
         return 0.0;
     }
@@ -70,7 +70,7 @@ public class ProfileMatrix {
 
     private void setByParams(double[] matrix, int[] indexes, int i, int j, double value) {
         if (i == j) {
-            diag[i] = value;
+            D[i] = value;
         }
         int size = indexes[i] - indexes[i - 1];
         int index = j - (i - size + 1);
@@ -87,14 +87,14 @@ public class ProfileMatrix {
                 for (int k = 0; k < j; k++) {
                     sum += get(i, k) * get(k, j);
                 }
-                setByParams(al, ial, i, j, get(i, j) - sum);
+                setByParams(L, IL, i, j, get(i, j) - sum);
             }
             for (int j = 0; j < i; j++) {
                 double sum = 0;
                 for (int k = 0; k < j; k++) {
                     sum += get(j, k) * get(k, i);
                 }
-                setByParams(au, iau, i, j, (get(j, i) - sum) / get(j, j));
+                setByParams(U, IU, i, j, (get(j, i) - sum) / get(j, j));
             }
         }
         isLU = true;
@@ -102,15 +102,15 @@ public class ProfileMatrix {
 
     public static void main(String[] args) throws Exception {
         /*
-        1, 5
-        0, 1
+        2, 0
+        0, 2
          */
-        double[] diag = {2.0, 2.0};
-        double[] al = {2.0, 2.0};
-        double[] au = {2.0, 2.0};
-        int[] ial = {0, 1};
-        int[] iau = {0, 1};
-        ProfileMatrix profileMatrix = new ProfileMatrix(diag, al, ial, au, iau);
+        double[] D = {2.0, 2.0};
+        double[] L = {2.0, 2.0};
+        double[] U = {2.0, 2.0};
+        int[] IL = {0, 1};
+        int[] IU = {0, 1};
+        ProfileMatrix profileMatrix = new ProfileMatrix(D, L, IL, U, IU);
         int sz = profileMatrix.size();
         for (int i = 0; i < sz; i++) {
             for (int j = 0; j < sz; j++) {

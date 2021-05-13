@@ -10,12 +10,12 @@ public class Main {
         2, 5
         0, 2
          */
-        double[] diag = {2.0, 2.0};
-        double[] al = {2.0, 2.0};
-        double[] au = {2.0, 2.0};
-        int[] ial = {0, 1};
-        int[] iau = {0, 1};
-        ProfileMatrix profileMatrix = new ProfileMatrix(diag, al, ial, au, iau);
+        double[] D = {2.0, 2.0};
+        double[] L = {2.0, 2.0};
+        double[] U = {2.0, 2.0};
+        int[] IL = {0, 1};
+        int[] IU = {0, 1};
+        ProfileMatrix profileMatrix = new ProfileMatrix(D, L, IL, U, IU);
 
         double[] b = {10.0, 5.0};
 
