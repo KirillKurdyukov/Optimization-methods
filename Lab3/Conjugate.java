@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.stream.IntStream;
 
 public class Conjugate {
-    private static int MAX_ITERATIONS = 4000;
     public static int lastIterations;
 
     double[] multiply(SparseMatrix A, double[] vect) {
@@ -44,6 +43,7 @@ public class Conjugate {
         //MatrixUtilities.checkSymmetric(A);
         double[] r0 = subtractVectors(f, A.smartMultiplication(x0));
         double[] z0 = r0;
+        int MAX_ITERATIONS = 3000;
         for (int k = 1; k < MAX_ITERATIONS; k++) {
             double[] Az0 = A.smartMultiplication(z0);
             double alphaK = scalar(r0, r0) / scalar(Az0, z0);

@@ -132,8 +132,8 @@ public class MatrixUtilities {
     public static ProfileMatrix generateProfileMatrix(int k) {
         if (profileMatrixA != null) {
             if (k == 0) {
-      //          double firstElement = profileMatrixA.getElement(0, 0);
-      //          profileMatrixA.replace(0, 0, firstElement - Math.pow(0.1, k - 1) + Math.pow(0.1, k));
+                //          double firstElement = profileMatrixA.getElement(0, 0);
+                //          profileMatrixA.replace(0, 0, firstElement - Math.pow(0.1, k - 1) + Math.pow(0.1, k));
             }
             return profileMatrixA;
         }

@@ -1,3 +1,5 @@
+import format.DenseMatrix;
+import format.Matrix;
 import methods.VectorNumbers;
 
 import java.io.BufferedReader;
