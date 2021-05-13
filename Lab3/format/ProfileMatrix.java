@@ -1,5 +1,8 @@
 package format;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 public class ProfileMatrix {
     private final double[] D;
     private final double[] L;
@@ -7,6 +10,47 @@ public class ProfileMatrix {
     private final int[] IL;
     private final int[] IU;
     private boolean isLU = false;
+
+    public ProfileMatrix(double[][] matrix) {
+        D = new double[matrix.length];
+        ArrayList<Double> al1 = new ArrayList<>();
+        ArrayList<Integer> ial1 = new ArrayList<>();
+        ArrayList<Double> au1 = new ArrayList<>();
+        ArrayList<Integer> iau1 = new ArrayList<>();
+        for (int i = 0; i < matrix.length; i++) {
+            D[i] = matrix[i][i];
+            int j = 0;
+            while(matrix[i][j] == 0) {
+                j++;
+            }
+            if (i == 0) {
+                ial1.add(0);
+            } else {
+                ial1.add(ial1.get(i - 1) + i - j + 1);
+            }
+            for (; j <= i; j++) {
+                al1.add(matrix[i][j]);
+            }
+        }
+        for (int i = 0; i < matrix.length; i++) {
+            int j = 0;
+            while(matrix[j][i] == 0) {
+                j++;
+            }
+            if (i == 0) {
+                iau1.add(0);
+            } else {
+                iau1.add(iau1.get(i - 1) + i - j + 1);
+            }
+            for (; j <= i; j++) {
+                au1.add(matrix[j][i]);
+            }
+        }
+        L = al1.stream().mapToDouble(i -> i).toArray();
+        U = au1.stream().mapToDouble(i -> i).toArray();
+        IL = ial1.stream().mapToInt(i -> i).toArray();
+        IU = iau1.stream().mapToInt(i -> i).toArray();
+    }
 
     public ProfileMatrix(double[] D, double[] L, int[] IL, double[] U, int[] IU) {
         this.D = D;
@@ -100,38 +144,14 @@ public class ProfileMatrix {
         isLU = true;
     }
 
-    public static void main(String[] args) throws Exception {
-        /*
-        2, 0
-        0, 2
-         */
-        double[] D = {2.0, 2.0};
-        double[] L = {2.0, 2.0};
-        double[] U = {2.0, 2.0};
-        int[] IL = {0, 1};
-        int[] IU = {0, 1};
-        ProfileMatrix profileMatrix = new ProfileMatrix(D, L, IL, U, IU);
-        int sz = profileMatrix.size();
-        for (int i = 0; i < sz; i++) {
-            for (int j = 0; j < sz; j++) {
-                System.out.print(profileMatrix.get(i, j) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        profileMatrix.LUDecomposition();
-        for (int i = 0; i < sz; i++) {
-            for (int j = 0; j < sz; j++) {
-                System.out.print(profileMatrix.getFromL(i, j) + " ");
-            }
-            System.out.println();
-        }
-        System.out.println();
-        for (int i = 0; i < sz; i++) {
-            for (int j = 0; j < sz; j++) {
-                System.out.print(profileMatrix.getFromU(i, j) + " ");
-            }
-            System.out.println();
-        }
+    public static void main(String[] args) {
+        ProfileMatrix m = new ProfileMatrix(new double[][]{{1, 1, 1},
+                                                           {0, 2, 2},
+                                                           {3, 3, 3}});
+        System.out.println(Arrays.toString(m.D));
+        System.out.println(Arrays.toString(m.L));
+        System.out.println(Arrays.toString(m.U));
+        System.out.println(Arrays.toString(m.IL));
+        System.out.println(Arrays.toString(m.IU));
     }
 }
