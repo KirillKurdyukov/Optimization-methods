@@ -2,6 +2,8 @@ package methods;
 
 import java.util.AbstractList;
 import java.util.ArrayList;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public abstract class Vector <T> extends AbstractList<T> {
 
@@ -27,8 +29,10 @@ public abstract class Vector <T> extends AbstractList<T> {
      * For test method.
      */
     public void output() {
-        for (var cur : arguments)
-            System.out.println(cur);
+        System.out.println(arguments.stream()
+                .map(Objects::toString)
+                .collect(Collectors.joining( " "))
+        );
     }
 
 }

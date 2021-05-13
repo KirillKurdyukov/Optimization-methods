@@ -35,6 +35,9 @@ public class DenseMatrix implements Matrix {
         double [] temp = matrix[i];
         matrix[i] = matrix[j];
         matrix[j] = temp;
+        double tempEl = freeVector.get(i);
+        freeVector.toSet(i, freeVector.get((j)));
+        freeVector.toSet(j, tempEl);
     }
 
     public double get(int i, int j) {
