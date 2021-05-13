@@ -155,29 +155,29 @@ public class SparseMatrix {
     }
 
     public static void main(String[] args) { // тесты для матрицы проходят, значит оно работает
-        double[][][] matrixes = new double[100][][];
+        double[][][] matrices = new double[100][][];
         for (int i = 0; i < 100; i++) {
             Random random = new Random();
             int n = abs(random.nextInt()) % 100;
-            matrixes[i] = new double[n][n];
+            matrices[i] = new double[n][n];
             for (int j = 0; j < n; j++) {
                 for (int k = 0; k < j; k++) {
                     if ((j + k) % 5 == 1) {
-                        matrixes[i][j][k] = 0;
-                        matrixes[i][k][j] = 0;
+                        matrices[i][j][k] = 0;
+                        matrices[i][k][j] = 0;
                     } else {
-                        matrixes[i][j][k] = max(1, random.nextDouble());
-                        matrixes[i][k][j] = max(1, random.nextDouble());
+                        matrices[i][j][k] = max(1, random.nextDouble());
+                        matrices[i][k][j] = max(1, random.nextDouble());
                     }
                 }
-                matrixes[i][j][j] = random.nextDouble();
+                matrices[i][j][j] = random.nextDouble();
             }
-            SparseMatrix a = new SparseMatrix(matrixes[i]);
+            SparseMatrix a = new SparseMatrix(matrices[i]);
             a.writeInFile("matr/test.txt");
             SparseMatrix b = new SparseMatrix("matr/test.txt");
             for (int j = 0; j < n; j++) {
                 for (int k = 0; k < n; k++) {
-                    if (matrixes[i][j][k] != a.getElement(j, k) || matrixes[i][j][k] != b.getElement(j, k)) {
+                    if (matrices[i][j][k] != a.getElement(j, k) || matrices[i][j][k] != b.getElement(j, k)) {
                         System.out.println("FAILED");
                     }
                 }

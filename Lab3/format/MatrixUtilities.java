@@ -125,64 +125,6 @@ public class MatrixUtilities {
         return new SparseMatrix(al, au, di, ia, ja);
     }
 
-    /**
-     * Генерирует первую матрицу Ak в формате ProfileMatrix
-     * Для генерация k матрицы необходимо, чтобы была сгенерирована k - 1 матрица
-     */
-    public static ProfileMatrix generateProfileMatrix(int k) {
-        if (profileMatrixA != null) {
-            if (k == 0) {
-                //          double firstElement = profileMatrixA.getElement(0, 0);
-                //          profileMatrixA.replace(0, 0, firstElement - Math.pow(0.1, k - 1) + Math.pow(0.1, k));
-            }
-            return profileMatrixA;
-        }
-        int n = randSize();
-        double[] al;
-        double[] au;
-        ArrayList<Double> alList = new ArrayList<>();
-        ArrayList<Double> auList = new ArrayList<>();
-        double[] di = new double[n];
-        int[] ia = new int[n + 2];
-        ia[0] = 0;
-        ia[1] = 0;
-        // Профиль на i-й строчке/столбце
-        for (int i = 1; i < n; i++) {
-            ia[i + 1] = ia[i] + random.nextInt(Math.min(i + 1, MAX_PROFILE));
-        }
-        // Добавление внедиагональных элементов
-        for (int i = 0; i < n; i++) {
-            di[i] = 0;
-            int rowProfile = ia[i + 1] - ia[i];
-            int profile = i - rowProfile;
-            // Комменты ниже в основном для меня, чтобы не запутаться. Могу забыть убрать
-            for (int p = profile; p < i; p++) {
-                // a[i][p]
-                // идет в сумму a[i][i]
-                double aip = getNotNullAij();
-                alList.add(aip);
-                di[i] -= aip;
-                // a[p][i]
-                // идет в сумму a[p][p]
-                double api = getNotNullAij();
-                auList.add(api);
-                di[p] = api;
-            }
-        }
-        al = new double[alList.size()];
-        au = new double[auList.size()];
-        for (int i = 0; i < alList.size(); i++) {
-            al[i] = alList.get(i);
-        }
-        for (int i = 0; i < auList.size(); i++) {
-            au[i] = auList.get(i);
-        }
-        // k == 0, так как первая генерация
-        di[0] += 1;
-        //profileMatrixA = new ProfileMatrix(al, au, di, ia);
-        return profileMatrixA;
-    }
-
     private static final double[] el = new double[]{0.0, -1.0, -2.0, -3.0, -4.0};
 
     private static double getAij() {
