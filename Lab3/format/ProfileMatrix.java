@@ -1,3 +1,5 @@
+package format;
+
 public class ProfileMatrix {
     private final double[] diag;
     private final double[] al;
@@ -36,7 +38,7 @@ public class ProfileMatrix {
             throw new MatrixFormatException("LU modification wasn't made");
         }
         if (i == j) {
-            return diag[i];
+            return 1.0;
         }
         if (i > j) {
             return getByParams(al, ial, i, j);
@@ -49,7 +51,7 @@ public class ProfileMatrix {
             throw new MatrixFormatException("LU modification wasn't made");
         }
         if (i == j) {
-            return 1.0;
+            return diag[i];
         }
         if (i < j) {
             return getByParams(au, iau, j, i);
@@ -83,32 +85,31 @@ public class ProfileMatrix {
             for (int j = 0; j <= i; j++) {
                 double sum = 0;
                 for (int k = 0; k < j; k++) {
-                    sum += this.get(i, k) * this.get(k, j);
+                    sum += get(i, k) * get(k, j);
                 }
-                setByParams(al, ial, i, j, this.get(i, j) - sum);
+                setByParams(al, ial, i, j, get(i, j) - sum);
             }
             for (int j = 0; j < i; j++) {
                 double sum = 0;
                 for (int k = 0; k < j; k++) {
-                    sum += this.get(j, k) * this.get(k, i);
+                    sum += get(j, k) * get(k, i);
                 }
-                setByParams(au, iau, i, j, (this.get(j, i) - sum) / this.get(j, j));
+                setByParams(au, iau, i, j, (get(j, i) - sum) / get(j, j));
             }
         }
-        this.isLU = true;
+        isLU = true;
     }
 
     public static void main(String[] args) throws Exception {
         /*
-        1, 2, 3
-        0, 2, 0
-        1, 2, 3
+        1, 5
+        0, 1
          */
-        double[] diag = {1.0, 2.0, 3.0};
-        double[] al = {1.0, 2.0, 1.0, 2.0, 3.0};
-        double[] au = {1.0, 2.0, 2.0, 3.0, 0.0, 3.0};
-        int[] ial = {0, 1, 4};
-        int[] iau = {0, 2, 5};
+        double[] diag = {2.0, 2.0};
+        double[] al = {2.0, 2.0};
+        double[] au = {2.0, 2.0};
+        int[] ial = {0, 1};
+        int[] iau = {0, 1};
         ProfileMatrix profileMatrix = new ProfileMatrix(diag, al, ial, au, iau);
         int sz = profileMatrix.size();
         for (int i = 0; i < sz; i++) {

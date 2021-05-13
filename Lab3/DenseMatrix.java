@@ -1,4 +1,3 @@
-import methods.Vector;
 import methods.VectorNumbers;
 
 import java.util.Arrays;
