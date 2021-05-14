@@ -14,19 +14,22 @@ import java.util.stream.IntStream;
 
 public class Gauss {
 
-    private static final double eps = 0.0000001;
+    private static final double eps = 0.00000000000001;
 
     public static void main(String[] args) {
         try {
-            if (args == null || args.length != 1 || args[0] == null)
-                throw new MatrixReadFileException("Incorrect arguments start program.");
-            process(args[0]);
-        } catch (MatrixReadFileException e) {
+//            if (args == null || args.length != 1 || args[0] == null)
+//                throw new MatrixFileException("Incorrect arguments start program.");
+            for (int i = 1; i < 5; i++)
+                process("Lab3/tests/matrixGilbert" + i);
+            for (int i = 1; i < 5; i++)
+                process("Lab3/tests/matrixDense" + i);
+        } catch (MatrixFileException e) {
             System.err.println(e.getMessage());
         }
     }
 
-    private static void process(String arg) throws MatrixReadFileException {
+    private static void process(String arg) throws MatrixFileException {
         Matrix denseMatrix;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of(arg))) {
             String currentLine;
@@ -47,13 +50,12 @@ public class Gauss {
                 ).map(Double::parseDouble)
                         .collect(Collectors.toList())));
             } catch (IOException | NumberFormatException e) {
-                throw new MatrixReadFileException("Error while reading file. " + e.getMessage());
+                throw new MatrixFileException("Error while reading file. " + e.getMessage());
             }
         } catch (
                 IOException e) {
-            throw new MatrixReadFileException("Input file error. " + e.getMessage());
+            throw new MatrixFileException("Input file error. " + e.getMessage());
         }
-
         VectorNumbers answer = new VectorNumbers(Collections.nCopies(denseMatrix.size(), null));
         switch (gauss(denseMatrix, answer)) {
             case 0 -> System.out.println("no solutions");
@@ -109,6 +111,7 @@ public class Gauss {
         }
         return true;
     }
+
     private static boolean pivoting(Matrix matrix, int row, int col) {
         int maxLineIndex = row;
         double localMax = 0.0;
@@ -129,7 +132,7 @@ public class Gauss {
         for (int i = row + 1; i < size; i++) {
             double delta = matrix.get(i, col) / matrix.get(row, col);
             for (int j = col; j < size; j++)
-                matrix.set(i, j,  matrix.get(i, j) - delta * matrix.get(row, j));
+                matrix.set(i, j, matrix.get(i, j) - delta * matrix.get(row, j));
             matrix.setFreeVectorNum(i, matrix.getFreeVector(i) - delta * matrix.getFreeVector(row));
             boolean checkZeroLine = true;
             for (int j = col; j < size; j++) {
