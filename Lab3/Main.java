@@ -10,15 +10,20 @@ public class Main {
         2, 5
         0, 2
          */
-        double[] D = {2.0, 2.0};
-        double[] L = {2.0, 2.0};
-        double[] U = {2.0, 2.0};
-        int[] IL = {0, 1};
-        int[] IU = {0, 1};
-        ProfileMatrix profileMatrix = new ProfileMatrix(D, L, IL, U, IU);
+        ProfileMatrix profileMatrix1 = new ProfileMatrix(new double[][]{
+                {1, 0.5, 0.3333333333333333},
+                {0.5, 0.3333333333333333, 0.25},
+                {0.3333333333333333, 0.25, 0.2}});
 
-        double[] b = {10.0, 5.0};
+        ProfileMatrix profileMatrix = new ProfileMatrix(new double[][]{
+                {1, 0, 0},
+                {0, 1, 0},
+                {0, 0, 1}});
+
+        double[] b = {1, 1, 1};
 
         System.out.println(Arrays.toString(LUMethod.solve(profileMatrix, b)));
     }
 }
+
+

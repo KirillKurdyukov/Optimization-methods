@@ -1,7 +1,6 @@
 package format;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class ProfileMatrix {
     private final double[] D;
@@ -77,12 +76,12 @@ public class ProfileMatrix {
         return getByParams(U, IU, j, i);
     }
 
-    public double getFromL(int i, int j) throws MatrixFormatException {
+    public double getFromU(int j, int i) throws MatrixFormatException {
         if (!isLU) {
             throw new MatrixFormatException("LU modification wasn't made");
         }
         if (i == j) {
-            return 1.0;
+            return D[i];
         }
         if (i > j) {
             return getByParams(L, IL, i, j);
@@ -90,12 +89,12 @@ public class ProfileMatrix {
         return 0.0;
     }
 
-    public double getFromU(int i, int j) throws MatrixFormatException {
+    public double getFromL(int j, int i) throws MatrixFormatException {
         if (!isLU) {
             throw new MatrixFormatException("LU modification wasn't made");
         }
         if (i == j) {
-            return D[i];
+            return 1.0;
         }
         if (i < j) {
             return getByParams(U, IU, j, i);
@@ -104,7 +103,12 @@ public class ProfileMatrix {
     }
 
     private double getByParams(double[] matrix, int[] indexes, int i, int j) {
-        int size = indexes[i] - indexes[i - 1];
+        int size;
+        if (i == 0) {
+            size = 1;
+        } else {
+            size = indexes[i] - indexes[i - 1];
+        }
         int index = j - (i - size + 1);
         if (index < 0) {
             return 0;
@@ -126,7 +130,7 @@ public class ProfileMatrix {
             throw new MatrixFormatException("LU modification was made");
         }
         for (int i = 1; i < size(); i++) {
-            for (int j = 0; j <= i; j++) {
+            for (int j = 0; j < i; j++) {
                 double sum = 0;
                 for (int k = 0; k < j; k++) {
                     sum += get(i, k) * get(k, j);
@@ -140,18 +144,47 @@ public class ProfileMatrix {
                 }
                 setByParams(U, IU, i, j, (get(j, i) - sum) / get(j, j));
             }
+            double sum = 0;
+            for (int k = 0; k < i; k++) {
+                sum += get(i, k) * get(k, i);
+            }
+            setByParams(L, IL, i, i, get(i, i) - sum);
         }
         isLU = true;
     }
 
-    public static void main(String[] args) {
-        ProfileMatrix m = new ProfileMatrix(new double[][]{{1, 1, 1},
-                                                           {0, 2, 2},
-                                                           {3, 3, 3}});
-        System.out.println(Arrays.toString(m.D));
-        System.out.println(Arrays.toString(m.L));
-        System.out.println(Arrays.toString(m.U));
-        System.out.println(Arrays.toString(m.IL));
-        System.out.println(Arrays.toString(m.IU));
+    public static void main(String[] args) throws MatrixFormatException {
+        ProfileMatrix profileMatrix = new ProfileMatrix(new double[][]{
+                {1, 0.5,  0.3333333333333333},
+                {0.5,  0.3333333333333333, 0.25},
+                {0.3333333333333333, 0.25, 0.2}});
+
+        int sz = profileMatrix.size();
+        for (int i = 0; i < sz; i++) {
+            for (int j = 0; j < sz; j++) {
+                System.out.print(profileMatrix.get(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        profileMatrix.LUDecomposition();
+
+        //System.out.println(Arrays.toString(profileMatrix.L));
+        //System.out.println(Arrays.toString(profileMatrix.U));
+        for (int i = 0; i < sz; i++) {
+            for (int j = 0; j < sz; j++) {
+                System.out.print(profileMatrix.getFromL(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        for (int i = 0; i < sz; i++) {
+            for (int j = 0; j < sz; j++) {
+                System.out.print(profileMatrix.getFromU(i, j) + " ");
+            }
+            System.out.println();
+        }
     }
 }
