@@ -13,7 +13,9 @@ import java.util.stream.IntStream;
 
 public class LUMethod {
     public static double[] solve(ProfileMatrix matrix, double[] b) throws MatrixFormatException {
+        //matrix.print();
         matrix.LUDecomposition();
+        //matrix.printLU();
 
         // Ly = b
         int size = matrix.size();
@@ -40,12 +42,13 @@ public class LUMethod {
 
     public static void main(String[] args) {
         try {
-            System.out.println("n  | k | |x* - x| | |x* - x| / |x*|");
-            for (int i = 10; i <= 1000; i*=10) {
-                for (int j = 1; j <= 10; j++) {
-                    process("Lab3/tests/matrixDense" + i + "_" + j, j);
-                }
-            }
+//            System.out.println("n  | k | |x* - x| | |x* - x| / |x*|");
+//            for (int i = 10; i <= 1000; i*=10) {
+//                for (int j = 1; j <= 10; j++) {
+//                    process("Lab3/tests/matrixDense" + i + "_" + j, j);
+//                }
+//            }
+            process("Lab3/tests/matrixDense" + 10 + "_" + 1, 1);
         } catch (MatrixFileException e) {
             System.err.println(e.getMessage());
         }

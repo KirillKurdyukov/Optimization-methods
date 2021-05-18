@@ -76,28 +76,28 @@ public class ProfileMatrix {
         return getByParams(U, IU, j, i);
     }
 
-    public double getFromU(int j, int i) throws MatrixFormatException {
-        if (!isLU) {
+    public double getFromU(int i, int j) throws MatrixFormatException {
+        /*if (!isLU) {
             throw new MatrixFormatException("LU modification wasn't made");
-        }
+        }*/
         if (i == j) {
             return D[i];
         }
-        if (i > j) {
-            return getByParams(L, IL, i, j);
+        if (i < j) {
+            return getByParams(U, IU, j, i);
         }
         return 0.0;
     }
 
-    public double getFromL(int j, int i) throws MatrixFormatException {
-        if (!isLU) {
+    public double getFromL(int i, int j) throws MatrixFormatException {
+        /*if (!isLU) {
             throw new MatrixFormatException("LU modification wasn't made");
-        }
+        }*/
         if (i == j) {
-            return 1.0;
+            return 1;
         }
-        if (i < j) {
-            return getByParams(U, IU, j, i);
+        if (i > j) {
+            return getByParams(L, IL, i, j);
         }
         return 0.0;
     }
@@ -119,9 +119,13 @@ public class ProfileMatrix {
     private void setByParams(double[] matrix, int[] indexes, int i, int j, double value) {
         if (i == j) {
             D[i] = value;
+            return;
         }
         int size = indexes[i] - indexes[i - 1];
         int index = j - (i - size + 1);
+        if (index < 0) {
+            return;
+        }
         matrix[indexes[i - 1] + 1 + index] = value;
     }
 
@@ -130,19 +134,22 @@ public class ProfileMatrix {
             throw new MatrixFormatException("LU modification was made");
         }
         for (int i = 1; i < size(); i++) {
+            printLU();
+            System.out.println();
             for (int j = 0; j < i; j++) {
                 double sum = 0;
                 for (int k = 0; k < j; k++) {
                     sum += get(i, k) * get(k, j);
                 }
-                setByParams(L, IL, i, j, get(i, j) - sum);
+                //System.out.println("In L: " + i + " " + j + " " + (get(i, j) - sum));
+                setByParams(L, IL, i, j, (get(i, j) - sum) / get(j, j));
             }
             for (int j = 0; j < i; j++) {
                 double sum = 0;
                 for (int k = 0; k < j; k++) {
                     sum += get(j, k) * get(k, i);
                 }
-                setByParams(U, IU, i, j, (get(j, i) - sum) / get(j, j));
+                setByParams(U, IU, i, j, (get(j, i) - sum));
             }
             double sum = 0;
             for (int k = 0; k < i; k++) {
@@ -151,6 +158,33 @@ public class ProfileMatrix {
             setByParams(L, IL, i, i, get(i, i) - sum);
         }
         isLU = true;
+    }
+
+    public void printLU() throws MatrixFormatException {
+        for (int i = 0; i < size(); i++) {
+            for (int j = 0; j < size(); j++) {
+                System.out.print(getFromL(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
+
+        for (int i = 0; i < size(); i++) {
+            for (int j = 0; j < size(); j++) {
+                System.out.print(getFromU(i, j) + " ");
+            }
+            System.out.println();
+        }
+    }
+
+    public void print() throws MatrixFormatException {
+        for (int i = 0; i < size(); i++) {
+            for (int j = 0; j < size(); j++) {
+                System.out.print(get(i, j) + " ");
+            }
+            System.out.println();
+        }
+        System.out.println();
     }
 
     public static void main(String[] args) throws MatrixFormatException {
