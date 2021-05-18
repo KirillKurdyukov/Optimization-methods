@@ -20,9 +20,9 @@ public class Main {
                 {0, 1, 0},
                 {0, 0, 1}});
 
-        double[] b = {1, 1, 1};
+        double[] b = {1.8333333333333333, 1.0833333333333333, 0.7833333333333332};
 
-        System.out.println(Arrays.toString(LUMethod.solve(profileMatrix, b)));
+        System.out.println(Arrays.toString(LUMethod.solve(profileMatrix1, b)));
     }
 }
 
