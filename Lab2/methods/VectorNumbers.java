@@ -2,6 +2,7 @@ package methods;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -45,6 +46,12 @@ public class VectorNumbers extends Vector<Double> {
                 .mapToObj(i -> this.arguments.get(i) * vec.get(i))
                 .reduce(Double::sum)
                 .orElseThrow();
+    }
+
+    public double [] toMassive() {
+        return arguments.stream()
+                .mapToDouble(Double::doubleValue)
+                .toArray();
     }
 
 }
