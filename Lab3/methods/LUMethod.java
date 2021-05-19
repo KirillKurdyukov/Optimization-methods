@@ -28,7 +28,9 @@ public class LUMethod extends TestAbstract {
 
     public static void main(String[] args) {
         LUMethod luMethod = new LUMethod();
+        luMethod.testDense1();
         luMethod.testDense2();
+        luMethod.testDense3();
     }
 
     public void process(String arg, int k) throws MatrixFileException, MatrixFormatException {

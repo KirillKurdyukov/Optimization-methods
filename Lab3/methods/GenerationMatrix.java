@@ -101,13 +101,15 @@ public class GenerationMatrix {
 
     public double [] generateFreeVector(double[][] matrix) {
         return Arrays.stream(matrix)
-                .mapToDouble(this::getRowSum)
-                .toArray();
+                .mapToDouble(i -> IntStream.range(1, i.length + 1)
+                        .mapToDouble(j -> j * i[j - 1])
+                        .reduce(Double::sum)
+                        .orElseThrow()
+                ).toArray();
     }
 
     private double getRowSum(double[] row) {
-        return IntStream.range(0, row.length)
-                .mapToDouble(i -> (i + 1) * row[i])
+        return Arrays.stream(row)
                 .reduce(Double::sum)
                 .orElseThrow();
     }
