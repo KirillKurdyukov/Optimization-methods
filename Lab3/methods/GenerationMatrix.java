@@ -18,6 +18,7 @@ public class GenerationMatrix {
     public static void main(String[] args) {
         genDenseMatrices();
         genGilbertMatrices();
+        genGilbertMatricesBonus();
     }
 
     private static void genDenseMatrices() {
@@ -37,6 +38,18 @@ public class GenerationMatrix {
         GenerationMatrix g = new GenerationMatrix();
         try {
             for (int i = 2; i <= 10; i++) {
+                g.generateGilbertDenseMatrix("Lab3/tests/matrixGilbert" + i, i);
+            }
+        } catch (MatrixFileException e) {
+            System.err.println(e.getMessage());
+        }
+
+    }
+
+    private static void genGilbertMatricesBonus() {
+        GenerationMatrix g = new GenerationMatrix();
+        try {
+            for (int i = 100; i <= 800; i+=100) {
                 g.generateGilbertDenseMatrix("Lab3/tests/matrixGilbert" + i, i);
             }
         } catch (MatrixFileException e) {

@@ -41,6 +41,17 @@ public abstract class TestAbstract {
         }
     }
 
+    protected void testDense3() {
+        try {
+            System.out.println("n  | |x* - x| | |x* - x| / |x*|");
+            for (int j = 100; j <= 1000; j+=100) {
+                process("Lab3/tests/matrixGilbert" + j, -1);
+            }
+        } catch (MatrixFileException | MatrixFormatException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
     protected DenseMatrix readMatrix(String arg) throws MatrixFileException {
         DenseMatrix denseMatrix;
         try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of(arg))) {
