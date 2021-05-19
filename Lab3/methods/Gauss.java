@@ -9,11 +9,11 @@ import java.util.stream.IntStream;
 
 public class Gauss extends TestAbstract{
 
-    private static final double eps = 0.000000000001;
+    private static final double eps = 0.0000001;
 
     public static void main(String[] args) {
         Gauss gauss = new Gauss();
-        gauss.testDense2();
+        gauss.testDense1();
     }
 
 

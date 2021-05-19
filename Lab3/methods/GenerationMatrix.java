@@ -10,7 +10,6 @@ import java.util.Arrays;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 public class GenerationMatrix {
@@ -57,6 +56,27 @@ public class GenerationMatrix {
             System.out.println(size + " | " + k + " | " + module(subtract) + " | " + module(subtract) / module(xStar));
         else
             System.out.println(size + " | " + module(subtract) + " | " + module(subtract) / module(xStar));
+    }
+
+    public static void testBonus(double [] x, int size, int k, double [] free, double [][] a) {
+        double [] xStar = IntStream.range(0, size)
+                .mapToDouble(i -> i + 1)
+                .toArray();
+        double [] subtract = IntStream.range(0, size)
+                .mapToDouble(i -> x[i] - xStar[i])
+                .toArray();
+        System.out.println(size + " | " + k + " | " + module(subtract) + " | " +  module(subtract) / module(xStar) + " | "
+                + (module(subtract) / module(xStar)) / (module(multiply(a, free)) / module(free)));
+    }
+
+    private static double[] multiply(double [][] a, double [] x) {
+        return Arrays.stream(a)
+                .mapToDouble(i -> IntStream
+                        .range(0, x.length)
+                        .mapToDouble(j -> x[j] * i[j])
+                        .reduce(Double::sum)
+                        .orElseThrow())
+                .toArray();
     }
 
     private static double module(double [] v) {

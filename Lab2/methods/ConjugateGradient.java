@@ -13,8 +13,9 @@ import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
-public class ConjugateGradient extends TestAbstract{
+public class ConjugateGradient extends TestAbstract {
     public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
+    private static int c = 0;
 
     public static VectorNumbers run(double eps, SquareMatrix A, VectorNumbers x, VectorNumbers b, Mode mode) {
         double alpha, beta;
@@ -36,6 +37,7 @@ public class ConjugateGradient extends TestAbstract{
                 x = x1;
                 p = p1;
                 grad = grad1;
+                c++;
             }
             grad = A.multiply(x).add(b);
         }
@@ -55,12 +57,20 @@ public class ConjugateGradient extends TestAbstract{
     @Override
     public void process(String arg, int k) throws MatrixFileException {
         DenseMatrix matrix = readMatrix(arg);
-        GenerationMatrix.test(run(0.0000000001,
+        GenerationMatrix.testBonus(run(0.000000001,
                 new SquareMatrix(matrix.getMatrix()),
                 new VectorNumbers(DoubleStream.generate(() -> 0)
                         .limit(matrix.size())
                         .toArray()),
-                new VectorNumbers(Arrays.stream(matrix.getFreeVector()).map(i -> -1 * i).toArray()),
-                Mode.BRENT).toMassive(), matrix.size(), k);
+                new VectorNumbers(Arrays.stream(matrix.getFreeVector())
+                        .map(i -> -1 * i)
+                        .toArray()),
+                Mode.BRENT).toMassive(),
+                matrix.size(),
+                c,
+                matrix.getFreeVector(),
+                matrix.getMatrix()
+        );
+        c = 0;
     }
 }
