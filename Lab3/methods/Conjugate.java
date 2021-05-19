@@ -1,5 +1,6 @@
 package methods;
 
+import format.DenseMatrix;
 import format.MatrixFileException;
 import format.SparseMatrix;
 
@@ -8,14 +9,6 @@ import java.util.stream.IntStream;
 
 public class Conjugate extends TestAbstract {
     public static int lastIterations;
-
-    double[] multiply(SparseMatrix A, double[] vect) {
-        int l = A.getColumnNumbers();
-        double[] res = new double[l];
-        IntStream.range(0, l).forEach(i -> IntStream.range(0, l)
-                .forEach(j -> res[i] += A.getElement(i, j) * vect[j]));
-        return res;
-    }
 
     double[] subtractVectors(double[] a, double[] b) {
         double[] res = Arrays.copyOf(a, a.length);
@@ -39,8 +32,7 @@ public class Conjugate extends TestAbstract {
         return res;
     }
 
-
-    public double[] solve(SparseMatrix A, double[] f, double epsilon) {
+    public double[] solve(SparseMatrix A, double[] f) {
         double[] x0 = new double[f.length];
         x0[0] = 1;
         double[] r0 = subtractVectors(f, A.smartMultiplication(x0));
@@ -56,6 +48,7 @@ public class Conjugate extends TestAbstract {
 
             double betaK = scalar(rK, rK) / scalar(r0, r0);
             double[] zK = sumVectors(rK, multiply(betaK, z0));
+            double epsilon = 0.00000000001;
             if (Math.sqrt(scalar(rK, rK) / scalar(f, f)) < epsilon) {
                 return xK;
             }
@@ -68,10 +61,14 @@ public class Conjugate extends TestAbstract {
     }
 
 
-    public static void main(String[] args) {}
+    public static void main(String[] args) {
+        Conjugate conjugate = new Conjugate();
+        conjugate.testDense1();
+    }
 
     @Override
     public void process(String arg, int k) throws MatrixFileException {
-
+        DenseMatrix denseMatrix = readMatrix(arg);
+        GenerationMatrix.test(solve(new SparseMatrix(denseMatrix.getMatrix()), denseMatrix.getFreeVector()), denseMatrix.size(), k);
     }
 }

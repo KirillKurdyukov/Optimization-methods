@@ -205,18 +205,6 @@ public class MatrixUtilities {
     public static String vectorToString(double[] v) {
         return Arrays.stream(v).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n"));
     }
-    public static void genWriteSparseMatrix(String fileName, int k) {
-        SparseMatrix m = generateSparseMatrix(k, 4);
-        int n = m.getRowNumbers();
-        double[] x = generateX(n);
-        double[] f = m.smartMultiplication(x);
-        m.writeInFile(fileName);
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(fileName), StandardOpenOption.APPEND)) {
-            writer.write(vectorToString(f) + vectorToString(x));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
     public static double[] readDoubleVector(BufferedReader reader) {
         try {

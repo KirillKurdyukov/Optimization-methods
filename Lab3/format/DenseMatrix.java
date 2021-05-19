@@ -52,6 +52,14 @@ public class DenseMatrix implements Matrix {
         return size;
     }
 
+    public double[][] getMatrix() {
+        return matrix;
+    }
+
+    public double[] getFreeVector() {
+        return freeVector.toMassive();
+    }
+
     @Override
     public String toString() {
         return Arrays.stream(matrix)

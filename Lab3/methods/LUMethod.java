@@ -1,21 +1,10 @@
 package methods;
 
-import format.MatrixFileException;
-import format.MatrixFormatException;
-import format.ProfileMatrix;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.stream.IntStream;
+import format.*;
 
 public class LUMethod extends TestAbstract {
     public static double[] solve(ProfileMatrix matrix, double[] b) throws MatrixFormatException {
         matrix.LUDecomposition();
-
-        // Ly = b
         int size = matrix.size();
         double[] y = new double[size];
         for (int i = 0; i < size; i++) {
@@ -26,7 +15,6 @@ public class LUMethod extends TestAbstract {
             y[i] = b[i] - sum;
         }
 
-        // Ux = y
         double[] x = new double[size];
         for (int i = 0; i < size; i++) {
             double sum = 0;
@@ -40,40 +28,12 @@ public class LUMethod extends TestAbstract {
 
     public static void main(String[] args) {
         LUMethod luMethod = new LUMethod();
-        luMethod.testDense1();
+        luMethod.testDense2();
     }
 
-    public void process(String arg, int k) throws MatrixFileException {
-        try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of(arg))) {
-            String currentLine;
-            double[][] matrix;
-            try {
-                currentLine = bufferedReader.readLine();
-                int size = Integer.parseInt(currentLine);
-                matrix = new double[size][size];
-                for (int i = 0; i < size; i++) {
-                    currentLine = bufferedReader.readLine();
-                    String[] elements = currentLine.split(" ");
-                    int finalI = i;
-                    IntStream.range(0, size)
-                            .forEach(j -> matrix[finalI][j] = Double.parseDouble(elements[j]));
-                }
-                double[] free = Arrays.stream(bufferedReader
-                        .readLine()
-                        .split(" ")
-                ).mapToDouble(Double::parseDouble)
-                        .toArray();
-                GenerationMatrix.test(LUMethod.solve(new ProfileMatrix(matrix), free), size, k);
-            } catch (IOException | NumberFormatException e) {
-                throw new MatrixFileException("Error while reading file. " + e.getMessage());
-            } catch (MatrixFormatException e) {
-                e.printStackTrace();
-            }
-        } catch (
-                IOException e) {
-            throw new MatrixFileException("Input file error. " + e.getMessage());
-        }
+    public void process(String arg, int k) throws MatrixFileException, MatrixFormatException {
+        DenseMatrix matrix = readMatrix(arg);
+        GenerationMatrix.test(LUMethod.solve(new ProfileMatrix(matrix.getMatrix()), matrix.getFreeVector()), matrix.size(), k);
     }
-
 
 }

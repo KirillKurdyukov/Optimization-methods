@@ -1,40 +1,19 @@
 package format;
 
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
-import java.util.stream.Collectors;
-
-import static java.lang.Math.abs;
-import static java.lang.Math.max;
 
 public class SparseMatrix {
-    private double[] al;      // эл-ты нижнего треуг
-    private double[] au;      // эл-ты верхнего треуг
-    private double[] di;      // хранит диагонльные элементы
-    private int[] ia;      //ia[i + 1] - ia[i] - кол-во внедиагоныльных эл-ов, на i-ой строчке
-    private int[] ja; // номера столбцов, нде лежат эти элементы
-    private int n; //размерность
-
-
-    public SparseMatrix(String filename) {
-        Path path = Path.of(filename);
-        try (BufferedReader reader = Files.newBufferedReader(path)) {
-            al = MatrixUtilities.readDoubleVector(reader);
-            au = MatrixUtilities.readDoubleVector(reader);
-            di = MatrixUtilities.readDoubleVector(reader);
-            ia = MatrixUtilities.readIntVector(reader);
-            ja = MatrixUtilities.readIntVector(reader);
-        } catch (IOException e) {
-            System.err.println("IO failed");
-        }
-    }
+    private final double[] al;      // эл-ты нижнего треуг
+    private final double[] au;      // эл-ты верхнего треуг
+    private final double[] di;      // хранит диагонльные элементы
+    private final int[] ia;      //ia[i + 1] - ia[i] - кол-во внедиагоныльных эл-ов, на i-ой строчке
+    private final int[] ja; // номера столбцов, нде лежат эти элементы
+    private final int n; //размерность
 
     public SparseMatrix(double[] al, double[] au, double[] di, int[] ia, int[] ja) {
         this.al = al;

@@ -26,32 +26,7 @@ public class Gauss extends TestAbstract{
 
 
     public void process(String arg, int k) throws MatrixFileException {
-        Matrix denseMatrix;
-        try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of(arg))) {
-            String currentLine;
-            try {
-                currentLine = bufferedReader.readLine();
-                int size = Integer.parseInt(currentLine);
-                denseMatrix = new DenseMatrix(size);
-                for (int i = 0; i < size; i++) {
-                    currentLine = bufferedReader.readLine();
-                    String[] elements = currentLine.split(" ");
-                    int finalI = i;
-                    IntStream.range(0, size)
-                            .forEach(j -> denseMatrix.set(finalI, j, Double.parseDouble(elements[j])));
-                }
-                denseMatrix.setFreeVector(new VectorNumbers(Arrays.stream(bufferedReader
-                        .readLine()
-                        .split(" ")
-                ).map(Double::parseDouble)
-                        .collect(Collectors.toList())));
-            } catch (IOException | NumberFormatException e) {
-                throw new MatrixFileException("Error while reading file. " + e.getMessage());
-            }
-        } catch (
-                IOException e) {
-            throw new MatrixFileException("Input file error. " + e.getMessage());
-        }
+        Matrix denseMatrix = readMatrix(arg);
         VectorNumbers answer = new VectorNumbers(Collections.nCopies(denseMatrix.size(), null));
         switch (gauss(denseMatrix, answer)) {
             case 0 -> System.out.println("no solutions");
