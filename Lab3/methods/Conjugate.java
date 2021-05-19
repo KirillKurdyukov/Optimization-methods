@@ -41,11 +41,8 @@ public class Conjugate extends TestAbstract {
         for (int k = 1; k < MAX_ITERATIONS; k++) {
             double[] Az0 = A.smartMultiplication(z0);
             double alphaK = scalar(r0, r0) / scalar(Az0, z0);
-
             double[] xK = sumVectors(x0, multiply(alphaK, z0));
             double[] rK = subtractVectors(r0, multiply(alphaK, Az0));
-
-
             double betaK = scalar(rK, rK) / scalar(r0, r0);
             double[] zK = sumVectors(rK, multiply(betaK, z0));
             double epsilon = 0.00000000001;
