@@ -17,6 +17,7 @@ public class GenerationMatrix {
     private static final int UPPER_BOUND_OF_NUMBER_GENERATION = 4;
 
     public static void main(String[] args) {
+        genDenseMatrices();
         genGilbertMatrices();
     }
 
@@ -46,9 +47,8 @@ public class GenerationMatrix {
     }
 
     public static void test(double [] x, int size, int k) {
-        double [] xStar = DoubleStream
-                .generate(() -> 1.0)
-                .limit(size)
+        double [] xStar = IntStream.range(0, size)
+                .mapToDouble(i -> i + 1)
                 .toArray();
         double [] subtract = IntStream.range(0, size)
                 .mapToDouble(i -> x[i] - xStar[i])
@@ -73,7 +73,8 @@ public class GenerationMatrix {
     }
 
     private double getRowSum(double[] row) {
-        return Arrays.stream(row)
+        return IntStream.range(0, row.length)
+                .mapToDouble(i -> (i + 1) * row[i])
                 .reduce(Double::sum)
                 .orElseThrow();
     }

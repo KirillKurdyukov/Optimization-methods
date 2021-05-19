@@ -1,11 +1,19 @@
 package methods;
 
 import engine.Mode;
+import format.DenseMatrix;
+import format.Matrix;
+import format.MatrixFileException;
+import format.MatrixFormatException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
-public class ConjugateGradient {
+public class ConjugateGradient extends TestAbstract{
     public static ArrayList<VectorNumbers> vectors = new ArrayList<>();
 
     public static VectorNumbers run(double eps, SquareMatrix A, VectorNumbers x, VectorNumbers b, Mode mode) {
@@ -37,5 +45,22 @@ public class ConjugateGradient {
         vectors.clear();
         run(eps, A, new VectorNumbers(List.of(0d, 0d)), b, mode);
 
+    }
+
+    public static void main(String[] args) {
+        ConjugateGradient c = new ConjugateGradient();
+        c.testDense1();
+    }
+
+    @Override
+    public void process(String arg, int k) throws MatrixFileException {
+        DenseMatrix matrix = readMatrix(arg);
+        GenerationMatrix.test(run(0.0000000001,
+                new SquareMatrix(matrix.getMatrix()),
+                new VectorNumbers(DoubleStream.generate(() -> 0)
+                        .limit(matrix.size())
+                        .toArray()),
+                new VectorNumbers(Arrays.stream(matrix.getFreeVector()).map(i -> -1 * i).toArray()),
+                Mode.BRENT).toMassive(), matrix.size(), k);
     }
 }

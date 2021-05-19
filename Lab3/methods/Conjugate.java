@@ -68,7 +68,7 @@ public class Conjugate extends TestAbstract {
 
             double betaK = scalar(rK, rK) / scalar(r0, r0);
             double[] zK = sum(rK, mult(betaK, z0));
-            double epsilon = 0.00000000001;
+            double epsilon = 0.000000001;
             if (Math.sqrt(scalar(rK, rK) / scalar(f, f)) < epsilon) {
                 return xK;
             }

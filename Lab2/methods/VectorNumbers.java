@@ -1,6 +1,7 @@
 package methods;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -11,6 +12,11 @@ public class VectorNumbers extends Vector<Double> {
     public VectorNumbers(List<Double> arguments) {
         super(new ArrayList<>(arguments));
     }
+
+    public VectorNumbers(double [] a) {
+        super(new ArrayList<>(Arrays.stream(a).boxed().collect(Collectors.toList())));
+    }
+
 
     public VectorNumbers add(Vector<Double> vector) {
         return new VectorNumbers(IntStream.range(0, this.size())

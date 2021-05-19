@@ -3,6 +3,7 @@ package methods;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class SquareMatrix {
     protected ArrayList<VectorNumbers> arguments;
@@ -26,4 +27,7 @@ public class SquareMatrix {
         return new VectorNumbers(ans);
     }
 
+    public SquareMatrix(double [][] matrix) {
+        arguments = Arrays.stream(matrix).map(VectorNumbers::new).collect(Collectors.toCollection(ArrayList::new));
+    }
 }
