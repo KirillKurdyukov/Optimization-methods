@@ -80,19 +80,6 @@ public class SparseMatrix {
         }
     }
 
-
-    public void writeInFile(String filename) {
-        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(filename))) {
-            writer.write(Arrays.stream(al).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
-            writer.write(Arrays.stream(au).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
-            writer.write(Arrays.stream(di).mapToObj(Double::toString).collect(Collectors.joining(" ", "", "\n")));
-            writer.write(Arrays.stream(ia).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
-            writer.write(Arrays.stream(ja).mapToObj(Integer::toString).collect(Collectors.joining(" ", "", "\n")));
-        } catch (IOException ignored) {
-
-        }
-    }
-
     public double getElement(int a, int b) {
         if (a == b) {
             return di[a];
@@ -154,35 +141,8 @@ public class SparseMatrix {
         return result;
     }
 
-    public static void main(String[] args) { // тесты для матрицы проходят, значит оно работает
-        double[][][] matrices = new double[100][][];
-        for (int i = 0; i < 100; i++) {
-            Random random = new Random();
-            int n = abs(random.nextInt()) % 100;
-            matrices[i] = new double[n][n];
-            for (int j = 0; j < n; j++) {
-                for (int k = 0; k < j; k++) {
-                    if ((j + k) % 5 == 1) {
-                        matrices[i][j][k] = 0;
-                        matrices[i][k][j] = 0;
-                    } else {
-                        matrices[i][j][k] = max(1, random.nextDouble());
-                        matrices[i][k][j] = max(1, random.nextDouble());
-                    }
-                }
-                matrices[i][j][j] = random.nextDouble();
-            }
-            SparseMatrix a = new SparseMatrix(matrices[i]);
-            a.writeInFile("matr/test.txt");
-            SparseMatrix b = new SparseMatrix("matr/test.txt");
-            for (int j = 0; j < n; j++) {
-                for (int k = 0; k < n; k++) {
-                    if (matrices[i][j][k] != a.getElement(j, k) || matrices[i][j][k] != b.getElement(j, k)) {
-                        System.out.println("FAILED");
-                    }
-                }
-            }
-        }
+    public static void main(String[] args) {
+
     }
 
 

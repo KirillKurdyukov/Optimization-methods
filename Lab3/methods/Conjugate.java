@@ -1,11 +1,12 @@
 package methods;
 
+import format.MatrixFileException;
 import format.SparseMatrix;
 
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class Conjugate {
+public class Conjugate extends TestAbstract {
     public static int lastIterations;
 
     double[] multiply(SparseMatrix A, double[] vect) {
@@ -42,7 +43,6 @@ public class Conjugate {
     public double[] solve(SparseMatrix A, double[] f, double epsilon) {
         double[] x0 = new double[f.length];
         x0[0] = 1;
-        //MatrixUtilities.checkSymmetric(A);
         double[] r0 = subtractVectors(f, A.smartMultiplication(x0));
         double[] z0 = r0;
         int MAX_ITERATIONS = 3000;
@@ -68,13 +68,10 @@ public class Conjugate {
     }
 
 
-    public static void main(String[] args) {
-        double[][] matrixOneSolution = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}}; // -1, 1, 3
-        double[][] matrixOneSolution2 = {{1, 2, 2}, {2, 1, 1}, {2, 1, 1}}; // -1, 1, 3
-        double[] b = {2, 2, 2};
-        double[] f = new Conjugate().solve(new SparseMatrix(matrixOneSolution2), b, 0.0000001);
-        for (double x : f) {
-            System.out.println(x);
-        }
+    public static void main(String[] args) {}
+
+    @Override
+    public void process(String arg, int k) throws MatrixFileException {
+
     }
 }

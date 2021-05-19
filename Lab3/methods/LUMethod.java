@@ -11,7 +11,7 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
-public class LUMethod {
+public class LUMethod extends TestAbstract {
     public static double[] solve(ProfileMatrix matrix, double[] b) throws MatrixFormatException {
         matrix.LUDecomposition();
 
@@ -39,19 +39,11 @@ public class LUMethod {
     }
 
     public static void main(String[] args) {
-        try {
-            System.out.println("n  | k | |x* - x| | |x* - x| / |x*|");
-            for (int i = 10; i <= 1000; i*=10) {
-                for (int j = 1; j <= 10; j++) {
-                    process("Lab3/tests/matrixDense" + i + "_" + j, j);
-                }
-            }
-        } catch (MatrixFileException e) {
-            System.err.println(e.getMessage());
-        }
+        LUMethod luMethod = new LUMethod();
+        luMethod.testDense1();
     }
 
-    private static void process(String arg, int k) throws MatrixFileException {
+    public void process(String arg, int k) throws MatrixFileException {
         try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of(arg))) {
             String currentLine;
             double[][] matrix;
@@ -71,8 +63,7 @@ public class LUMethod {
                         .split(" ")
                 ).mapToDouble(Double::parseDouble)
                         .toArray();
-                System.out.println(Arrays.toString(LUMethod.solve(new ProfileMatrix(matrix), free)));
-            //    GenerationMatrix.test(LUMethod.solve(new ProfileMatrix(matrix), free), size, k);
+                GenerationMatrix.test(LUMethod.solve(new ProfileMatrix(matrix), free), size, k);
             } catch (IOException | NumberFormatException e) {
                 throw new MatrixFileException("Error while reading file. " + e.getMessage());
             } catch (MatrixFormatException e) {
