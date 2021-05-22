@@ -1,9 +1,6 @@
 package methods;
 
-import format.DenseMatrix;
-import format.Matrix;
-import format.MatrixFileException;
-import format.MatrixFormatException;
+import format.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -80,5 +77,18 @@ public abstract class TestAbstract {
             throw new MatrixFileException("Input file error. " + e.getMessage());
         }
         return denseMatrix;
+    }
+
+    protected SparseMatrix readSparseMatrix(String arg) throws MatrixFileException {
+        try (BufferedReader bufferedReader = Files.newBufferedReader(Path.of(arg))) {
+            final double[] al = Arrays.stream(bufferedReader.readLine().split(" ")).mapToDouble(Double::parseDouble).toArray();
+            final double[] au = Arrays.stream(bufferedReader.readLine().split(" ")).mapToDouble(Double::parseDouble).toArray();
+            final double[] di = Arrays.stream(bufferedReader.readLine().split(" ")).mapToDouble(Double::parseDouble).toArray();
+            final int[] ia = Arrays.stream(bufferedReader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            final int[] ja = Arrays.stream(bufferedReader.readLine().split(" ")).mapToInt(Integer::parseInt).toArray();
+            return new SparseMatrix(al, au, di, ia, ja);
+        } catch (IOException e) {
+            throw  new MatrixFileException("Wait sparse matrix. " + e.getMessage());
+        }
     }
 }

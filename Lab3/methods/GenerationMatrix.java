@@ -1,7 +1,6 @@
 package methods;
 
 import format.MatrixFileException;
-
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -71,15 +70,22 @@ public class GenerationMatrix {
             System.out.println(size + " | " + module(subtract) + " | " + module(subtract) / module(xStar));
     }
 
+    private static double[] subtract(double [] x, double [] xStar) {
+        return IntStream.range(0, x.length)
+                .mapToDouble(i -> x[i] - xStar[i])
+                .toArray();
+    }
     public static void testBonus(double [] x, int size, int k, double [] free, double [][] a) {
         double [] xStar = IntStream.range(0, size)
                 .mapToDouble(i -> i + 1)
                 .toArray();
-        double [] subtract = IntStream.range(0, size)
-                .mapToDouble(i -> x[i] - xStar[i])
-                .toArray();
+        double [] subtract = subtract(x, xStar);
+        double [] Ax = multiply(a, x);
+
+        double [] subtract2 = subtract(free, Ax);
         System.out.println(size + " | " + k + " | " + module(subtract) + " | " +  module(subtract) / module(xStar) + " | "
-                + (module(subtract) / module(xStar)) / (module(multiply(a, free)) / module(free)));
+                + (module(subtract) / module(xStar))
+                / (module(subtract2) / module(free)));
     }
 
     private static double[] multiply(double [][] a, double [] x) {
@@ -124,9 +130,9 @@ public class GenerationMatrix {
         double[][] matrix = new double[n][n];
         Random random = new Random();
         IntStream.range(0, n).forEach(i ->
-                IntStream.range(0, n).forEach(j -> {
+                IntStream.range(i, n).forEach(j -> {
                             if (i != j)
-                                matrix[i][j] = -1.0 * random.nextInt(UPPER_BOUND_OF_NUMBER_GENERATION);
+                                matrix[j][i] = matrix[i][j] = /*-1.0*/  random.nextInt(UPPER_BOUND_OF_NUMBER_GENERATION);
                         }
                 )
         );
@@ -139,6 +145,7 @@ public class GenerationMatrix {
 
         writeMatrixInFile(arg, n, matrix);
     }
+
 
     public void generateGilbertDenseMatrix(String arg, int n) throws MatrixFileException {
         double[][] matrix = new double[n][n];
@@ -177,5 +184,10 @@ public class GenerationMatrix {
             throw new MatrixFileException("Error output file: " + e.getMessage());
         }
     }
+
+    private void generationSparseMatrix() {
+
+    }
+
 
 }

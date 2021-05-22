@@ -51,7 +51,9 @@ public class ConjugateGradient extends TestAbstract {
 
     public static void main(String[] args) {
         ConjugateGradient c = new ConjugateGradient();
+        c.testDense1();
         c.testDense2();
+        c.testDense3();
     }
 
     @Override

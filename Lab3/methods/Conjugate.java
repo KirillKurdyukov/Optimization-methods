@@ -44,7 +44,7 @@ public class Conjugate extends TestAbstract {
             double[] xK = sumVectors(x0, multiply(alphaK, z0));
             double[] rK = subtractVectors(r0, multiply(alphaK, Az0));
             double betaK = scalar(rK, rK) / scalar(r0, r0);
-            double epsilon = 0.000000001;
+            double epsilon = 0.000000000001;
             double[] zK = sumVectors(rK, multiply(betaK, z0));
             if (Math.sqrt(scalar(rK, rK) / scalar(f, f)) < epsilon) {
                 return xK;
@@ -61,11 +61,13 @@ public class Conjugate extends TestAbstract {
     public static void main(String[] args) {
         Conjugate conjugate = new Conjugate();
         conjugate.testDense1();
+        conjugate.testDense2();
+        conjugate.testDense3();
     }
 
     @Override
     public void process(String arg, int k) throws MatrixFileException {
         DenseMatrix denseMatrix = readMatrix(arg);
-        GenerationMatrix.test(solve(new SparseMatrix(denseMatrix.getMatrix()), denseMatrix.getFreeVector()), denseMatrix.size(), k);
+        GenerationMatrix.test(solve(new SparseMatrix(denseMatrix.getMatrix()), denseMatrix.getFreeVector()), denseMatrix.size(), lastIterations);
     }
 }
