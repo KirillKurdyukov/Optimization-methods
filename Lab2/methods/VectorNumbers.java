@@ -2,6 +2,7 @@ package methods;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -17,6 +18,9 @@ public class VectorNumbers extends Vector<Double> {
         super(new ArrayList<>(Arrays.stream(a).boxed().collect(Collectors.toList())));
     }
 
+    public VectorNumbers(int size) {
+        super(new ArrayList<>(Collections.nCopies(size, null)));
+    }
 
     public VectorNumbers add(Vector<Double> vector) {
         return new VectorNumbers(IntStream.range(0, this.size())

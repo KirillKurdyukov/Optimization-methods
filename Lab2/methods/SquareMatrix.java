@@ -19,6 +19,12 @@ public class SquareMatrix {
         return 0;
     }
 
+    public double[][] getMatrix() {
+        return (double[][]) arguments.stream()
+                .map(VectorNumbers::toMassive)
+                .toArray();
+    }
+
     public VectorNumbers multiply(VectorNumbers vec) {
         ArrayList<Double> ans = new ArrayList<>(0);
         for (int i = 0; i < vec.size(); i++) {

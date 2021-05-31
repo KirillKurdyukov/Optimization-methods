@@ -16,6 +16,12 @@ public class DenseMatrix implements Matrix {
         this.matrix = new double[size][size];
     }
 
+    public DenseMatrix(double[][] matrix, VectorNumbers v) {
+        this.matrix = matrix;
+        this.freeVector = v;
+        this.size = v.size();
+    }
+
     public void setFreeVector(VectorNumbers b) {
         this.freeVector = b;
     }

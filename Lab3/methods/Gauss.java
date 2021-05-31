@@ -35,7 +35,7 @@ public class Gauss extends TestAbstract{
     1 - many solutions
     2 - one solution
      */
-    private static int gauss(Matrix matrix, VectorNumbers answer) {
+    public static int gauss(Matrix matrix, VectorNumbers answer) {
         int size = matrix.size();
         for (int col = 0, row = 0; col < size && row < size; row++) {
             col = row;

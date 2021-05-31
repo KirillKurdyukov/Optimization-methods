@@ -1,14 +1,18 @@
 package methods;
 
 import format.MatrixFileException;
+
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 public class GenerationMatrix {
@@ -23,7 +27,7 @@ public class GenerationMatrix {
     private static void genDenseMatrices() {
         GenerationMatrix g = new GenerationMatrix();
         try {
-            for (int i = 10; i <= 1000; i*=10) {
+            for (int i = 10; i <= 1000; i *= 10) {
                 for (int j = 1; j <= 10; j++)
                     g.generateDenseMatrix("Lab3/tests/matrixDense" + i + "_" + j, i, j);
             }
@@ -48,7 +52,7 @@ public class GenerationMatrix {
     private static void genGilbertMatricesBonus() {
         GenerationMatrix g = new GenerationMatrix();
         try {
-            for (int i = 100; i <= 800; i+=100) {
+            for (int i = 100; i <= 800; i += 100) {
                 g.generateGilbertDenseMatrix("Lab3/tests/matrixGilbert" + i, i);
             }
         } catch (MatrixFileException e) {
@@ -57,11 +61,11 @@ public class GenerationMatrix {
 
     }
 
-    public static void test(double [] x, int size, int k) {
-        double [] xStar = IntStream.range(0, size)
+    public static void test(double[] x, int size, int k) {
+        double[] xStar = IntStream.range(0, size)
                 .mapToDouble(i -> i + 1)
                 .toArray();
-        double [] subtract = IntStream.range(0, size)
+        double[] subtract = IntStream.range(0, size)
                 .mapToDouble(i -> x[i] - xStar[i])
                 .toArray();
         if (k != -1)
@@ -70,25 +74,26 @@ public class GenerationMatrix {
             System.out.println(size + " | " + module(subtract) + " | " + module(subtract) / module(xStar));
     }
 
-    private static double[] subtract(double [] x, double [] xStar) {
+    private static double[] subtract(double[] x, double[] xStar) {
         return IntStream.range(0, x.length)
                 .mapToDouble(i -> x[i] - xStar[i])
                 .toArray();
     }
-    public static void testBonus(double [] x, int size, int k, double [] free, double [][] a) {
-        double [] xStar = IntStream.range(0, size)
+
+    public static void testBonus(double[] x, int size, int k, double[] free, double[][] a) {
+        double[] xStar = IntStream.range(0, size)
                 .mapToDouble(i -> i + 1)
                 .toArray();
-        double [] subtract = subtract(x, xStar);
-        double [] Ax = multiply(a, x);
+        double[] subtract = subtract(x, xStar);
+        double[] Ax = multiply(a, x);
 
-        double [] subtract2 = subtract(free, Ax);
-        System.out.println(size + " | " + k + " | " + module(subtract) + " | " +  module(subtract) / module(xStar) + " | "
+        double[] subtract2 = subtract(free, Ax);
+        System.out.println(size + " | " + k + " | " + module(subtract) + " | " + module(subtract) / module(xStar) + " | "
                 + (module(subtract) / module(xStar))
                 / (module(subtract2) / module(free)));
     }
 
-    private static double[] multiply(double [][] a, double [] x) {
+    private static double[] multiply(double[][] a, double[] x) {
         return Arrays.stream(a)
                 .mapToDouble(i -> IntStream
                         .range(0, x.length)
@@ -98,14 +103,14 @@ public class GenerationMatrix {
                 .toArray();
     }
 
-    private static double module(double [] v) {
+    private static double module(double[] v) {
         return Math.sqrt(Arrays.stream(v)
                 .map(i -> i * i)
                 .reduce(Double::sum)
                 .orElseThrow());
     }
 
-    public double [] generateFreeVector(double[][] matrix) {
+    public double[] generateFreeVector(double[][] matrix) {
         return Arrays.stream(matrix)
                 .mapToDouble(i -> IntStream.range(1, i.length + 1)
                         .mapToDouble(j -> j * i[j - 1])
@@ -185,9 +190,40 @@ public class GenerationMatrix {
         }
     }
 
-    private void generationSparseMatrix() {
-
+    private void writeSparseMatrix(String al,
+                                   String au,
+                                   String di,
+                                   String ia,
+                                   String ja,
+                                   String file) throws MatrixFileException {
+        try (BufferedWriter writer = Files.newBufferedWriter(Path.of(file))) {
+            writer.write(al);
+            writer.newLine();
+            writer.write(au);
+            writer.newLine();
+            writer.write(di);
+            writer.newLine();
+            writer.write(ia);
+            writer.newLine();
+            writer.write(ja);
+            writer.newLine();
+        } catch (IOException e) {
+            throw new MatrixFileException("Error output file: " + e.getMessage());
+        }
     }
 
+    private void generationSparseMatrix() {
+        final int FIRST_SIZE = 10000;
+        final int SECOND_SIZE = 100000;
+        String pathRoot = "Lab3/tests/sparseMatrix";
+        Random random = new Random();
+        for (int i = 1; i <= 10; i++) {
+            String alAndAu = DoubleStream.generate(() -> -1 * random.nextInt(UPPER_BOUND_OF_NUMBER_GENERATION))
+                    .limit(i * FIRST_SIZE)
+                    .mapToObj(Objects::toString)
+                    .collect(Collectors.joining(" "));
+
+        }
+    }
 
 }
