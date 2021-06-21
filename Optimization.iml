@@ -12,8 +12,10 @@
       <sourceFolder url="file://$MODULE_DIR$/Lab1" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Lab2" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/Lab3" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Lab4" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/Lab4R" isTestSource="false" />
     </content>
-    <orderEntry type="inheritedJdk" />
+    <orderEntry type="jdk" jdkName="13.0.2" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="ibxm" level="project" />
   </component>

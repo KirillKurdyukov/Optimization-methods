@@ -3,11 +3,12 @@ package methods;
 
 import format.Matrix;
 import format.MatrixFileException;
+
 import java.util.Collections;
 import java.util.stream.IntStream;
 
 
-public class Gauss extends TestAbstract{
+public class Gauss extends TestAbstract {
 
     private static final double eps = 0.000000000001;
 
@@ -22,11 +23,11 @@ public class Gauss extends TestAbstract{
     public void process(String arg, int k) throws MatrixFileException {
         Matrix denseMatrix = readMatrix(arg);
         VectorNumbers answer = new VectorNumbers(Collections.nCopies(denseMatrix.size(), null));
-        switch (gauss(denseMatrix, answer)) {
-            case 0 -> System.out.println("no solutions");
-            case 1 -> System.out.println("many solutions");
-            case 2 -> GenerationMatrix.test(answer.toMassive(), answer.size(), k);
-        }
+       // switch (gauss(denseMatrix, answer)) {
+         //   case 0 -> System.out.println("no solutions");
+        //    case 1 -> System.out.println("many solutions");
+        //    case 2 -> GenerationMatrix.test(answer.toMassive(), answer.size(), k);
+       // }
 
     }
 
